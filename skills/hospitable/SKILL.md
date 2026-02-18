@@ -8,21 +8,22 @@ metadata:
 
 # Hospitable 🏠
 
-Always use exec to run curl commands. Use double quotes. Token is hardcoded below.
+Always use exec to run curl commands. Use double quotes.
 
 ## API calls
 
 Get properties:
 ```bash
-curl -s "https://public.api.hospitable.com/v2/properties" -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5YTYyNGRmMC0xMmYxLTQ0OGUtYjg4NC00MzY3ODBhNWQzY2QiLCJqdGkiOiIwOTNlMzU0YzgwYmI2MzYyNDY3NjFhN2JhMGUxMDAzYjhiMGUyNzg4NDVhNmZkNTkzMjkxMjQzNWM5Njc4NjkyYTcwNGVjMjNmZTg1Njg2NSIsImlhdCI6MTc3MTM0MDExOC4zMTk1MzIsIm5iZiI6MTc3MTM0MDExOC4zMTk1MzUsImV4cCI6MTgwMjg3NjExOC4zMTMyNTQsInN1YiI6IjgwNjkwIiwic2NvcGVzIjpbInBhdDpyZWFkIiwicGF0OndyaXRlIl19.F9a9mM7RqKkg6KJhe1kfJ8y3SVgy_q4Ex3VAzSqnx9NmHORihH1YdSrkRZ-7G9EpHGusBA1Q44u4qG_C6FiwuP5Fv74ig0w_NbWOYK_nTCOS0iN058g16HKyAz1jupPMKoml-t_aETy3_FK31quUvbc5GyxNU2X9rrn1XeDpwhKLYIXk7FY5IU2-_4HTrVBzjx40c7EqqBQrJhg4FRdVa2IhzQ_ouMR3azluxLMMFUIvgsy85NxbpkOfPtv1o1LNPG33TABsY1h5hiLsmigxERG67CaU6pnvpyrlKE3mum3IDzBPneps8R7vrcSXHj_XCKyW5nvEqOMROl0tAn1jwboymbgjraSoKxjqGZlXzqPHZ4tipCTVKr5Ehag8HGgLrih1reHuYnYS4LUBcXEcKlSXeQw7ngwwG_Zow3Gc8f4h2OsfczS7W9qZKsLjiwHLislTnkge98cJsE0iMXaEfVZ267D4DCVOOFN9ascNqrIwIV5UHZquFOvWxPLudTVY310p3Zz_A_Y1HXTi-t3FHVWhIbiBQpK6u_Ek7FmoSF6st6BIgDR6vRhjRHRY7pyHgRx5r_ORbUylhfFrdRrlr270pzfkLoL_GeI_KskRbPTuigzIKm89l_CwjKmwFdHJE8B1v_2o1cnPeCZ4GWU5hE35sz98l1jJyySw4UNCA9A" -H "Accept: application/json"
+TOKEN=$(cat ~/.openclaw/workspace/hospitable_token.txt) && curl -sg "https://public.api.hospitable.com/v2/properties" -H "Authorization: Bearer $TOKEN" -H "Accept: application/json"
 ```
 
 Get reservations:
 ```bash
-curl -s "https://public.api.hospitable.com/v2/reservations?filter[start_date]=YYYY-MM-DD&filter[end_date]=YYYY-MM-DD" -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5YTYyNGRmMC0xMmYxLTQ0OGUtYjg4NC00MzY3ODBhNWQzY2QiLCJqdGkiOiIwOTNlMzU0YzgwYmI2MzYyNDY3NjFhN2JhMGUxMDAzYjhiMGUyNzg4NDVhNmZkNTkzMjkxMjQzNWM5Njc4NjkyYTcwNGVjMjNmZTg1Njg2NSIsImlhdCI6MTc3MTM0MDExOC4zMTk1MzIsIm5iZiI6MTc3MTM0MDExOC4zMTk1MzUsImV4cCI6MTgwMjg3NjExOC4zMTMyNTQsInN1YiI6IjgwNjkwIiwic2NvcGVzIjpbInBhdDpyZWFkIiwicGF0OndyaXRlIl19.F9a9mM7RqKkg6KJhe1kfJ8y3SVgy_q4Ex3VAzSqnx9NmHORihH1YdSrkRZ-7G9EpHGusBA1Q44u4qG_C6FiwuP5Fv74ig0w_NbWOYK_nTCOS0iN058g16HKyAz1jupPMKoml-t_aETy3_FK31quUvbc5GyxNU2X9rrn1XeDpwhKLYIXk7FY5IU2-_4HTrVBzjx40c7EqqBQrJhg4FRdVa2IhzQ_ouMR3azluxLMMFUIvgsy85NxbpkOfPtv1o1LNPG33TABsY1h5hiLsmigxERG67CaU6pnvpyrlKE3mum3IDzBPneps8R7vrcSXHj_XCKyW5nvEqOMROl0tAn1jwboymbgjraSoKxjqGZlXzqPHZ4tipCTVKr5Ehag8HGgLrih1reHuYnYS4LUBcXEcKlSXeQw7ngwwG_Zow3Gc8f4h2OsfczS7W9qZKsLjiwHLislTnkge98cJsE0iMXaEfVZ267D4DCVOOFN9ascNqrIwIV5UHZquFOvWxPLudTVY310p3Zz_A_Y1HXTi-t3FHVWhIbiBQpK6u_Ek7FmoSF6st6BIgDR6vRhjRHRY7pyHgRx5r_ORbUylhfFrdRrlr270pzfkLoL_GeI_KskRbPTuigzIKm89l_CwjKmwFdHJE8B1v_2o1cnPeCZ4GWU5hE35sz98l1jJyySw4UNCA9A" -H "Accept: application/json"
+TOKEN=$(cat ~/.openclaw/workspace/hospitable_token.txt) && curl -sg "https://public.api.hospitable.com/v2/reservations?properties%5B%5D=cd4bf5fb-16ef-49c8-b3db-93437e5f009f&properties%5B%5D=912db8e2-ef92-44fa-b257-6f843c87e520&properties%5B%5D=ec148f18-8c8a-456b-8bd9-b86e1c4086f9&properties%5B%5D=4cb5b686-ed1e-470c-90e8-e50500b0d77a&start_date=YYYY-MM-DD&end_date=YYYY-MM-DD" -H "Authorization: Bearer $TOKEN" -H "Accept: application/json"
 ```
 
 ## Rules
-- Replace YYYY-MM-DD with actual dates
-- Always confirm before sending guest messages
-- Parse JSON response and present cleanly
+- Replace YYYY-MM-DD with actual dates.
+- Today is Wednesday, Feb 18th, 2026.
+- Always confirm before sending guest messages.
+- Parse JSON response and present cleanly. Host names for IDs: Milano (cd4...), Bardonecchia (912...), Drovetti (ec1...), Giacinto Collegno (4cb...).
