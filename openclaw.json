@@ -36,12 +36,17 @@
       "cliBackends": {
         "claude-max": {
           "command": "/Users/lorenzogennero/.npm-global/bin/claude",
-          "args": ["--output-format", "json"],
+          "args": [
+            "--output-format",
+            "json"
+          ],
           "output": "json",
           "input": "arg",
           "sessionMode": "always",
           "sessionArg": "--resume",
-          "sessionIdFields": ["sessionId"]
+          "sessionIdFields": [
+            "sessionId"
+          ]
         }
       }
     },
