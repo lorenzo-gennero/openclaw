@@ -7,3 +7,4 @@ credentials/
 logs/
 .env
 .DS_Store
+media/
