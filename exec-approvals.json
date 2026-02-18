@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "socket": {
+    "path": "/Users/lorenzogennero/.openclaw/exec-approvals.sock",
+    "token": "***REMOVED***"
+  },
+  "defaults": {},
+  "agents": {}
+}

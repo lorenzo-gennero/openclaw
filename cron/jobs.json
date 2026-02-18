@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "jobs": [
+    {
+      "id": "7dc83dd4-d88e-44e7-9402-9a6e1961fc40",
+      "agentId": "main",
+      "name": "Daily Check-ins and Check-outs",
+      "enabled": true,
+      "notify": true,
+      "createdAtMs": 1771346683329,
+      "updatedAtMs": 1771398027337,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 8 * * *",
+        "tz": "Europe/Vienna"
+      },
+      "sessionTarget": "main",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "systemEvent",
+        "text": "Reminder: Today's check-ins and check-outs include the property names."
+      },
+      "state": {
+        "nextRunAtMs": 1771484400000,
+        "lastRunAtMs": 1771398000040,
+        "lastStatus": "ok",
+        "lastDurationMs": 27297,
+        "consecutiveErrors": 0
+      }
+    }
+  ]
+}

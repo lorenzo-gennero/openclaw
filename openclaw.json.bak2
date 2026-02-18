@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.2.15",
+    "lastTouchedAt": "2026-02-17T10:51:40.597Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-02-17T10:45:52.848Z",
+    "lastRunVersion": "2026.2.15",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
+  },
+  "agents": {
+    "defaults": {
+      "workspace": "/Users/lorenzogennero/.openclaw/workspace"
+    }
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto"
+  },
+  "gateway": {
+    "mode": "local",
+    "auth": {
+      "mode": "token",
+      "token": "4d89ef5622f4bcb28b9b2c22cc4510e16044a93dbb45c0f2"
+    }
+  }
+}
