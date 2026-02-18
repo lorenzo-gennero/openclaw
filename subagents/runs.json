@@ -72,7 +72,12 @@
       "createdAt": 1771458315982,
       "startedAt": 1771458316110,
       "archiveAtMs": 1771461915982,
-      "cleanupHandled": false
+      "cleanupHandled": true,
+      "endedAt": 1771458453218,
+      "outcome": {
+        "status": "ok"
+      },
+      "cleanupCompletedAt": 1771458468524
     },
     "79ea4b16-d8c2-4eb4-b914-d217e7bc2d24": {
       "runId": "79ea4b16-d8c2-4eb4-b914-d217e7bc2d24",

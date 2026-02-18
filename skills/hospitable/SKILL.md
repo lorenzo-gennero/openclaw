@@ -1,6 +1,6 @@
 ---
 name: hospitable
-description: Manage Airbnb properties, reservations and check-ins via Hospitable API. Use when Lorenzo asks about properties, bookings, check-ins, check-outs or guests IN ANY LANGUAGE.
+description: Manage Airbnb properties, reservations and check-ins via Hospitable API. Use when Lorenzo asks about properties, bookings, check-ins, check-outs or guests IN ANY LANGUAGE (Italian, English, French, etc.)
 metadata:
   openclaw:
     emoji: 🏠
@@ -8,61 +8,119 @@ metadata:
 
 # Hospitable 🏠
 
-## ⚡ TRIGGER — ANY Language
+## ⚡ CRITICAL — Run BEFORE Answering ANY Property Question
 
-**When Lorenzo asks ANYTHING about bookings, check-ins, check-outs, guests, or properties IN ANY LANGUAGE (English, Italian, French, etc.), IMMEDIATELY run:**
+**ALWAYS run `python3 ~/.openclaw/workspace/hospitable.py` before answering ANY question about properties, bookings, guests, check-ins, check-outs, or revenue. Never answer from memory. Never say you can't retrieve data.**
 
-```bash
-python3 ~/.openclaw/workspace/hospitable.py
-```
+---
 
-### Italian triggers (examples — not exhaustive):
-- "quante prenotazioni" → bookings query
-- "chi arriva oggi" / "chi arriva questa settimana" → check-ins
-- "chi parte oggi" → check-outs
-- "ospiti" → guests
-- "proprietà" → properties
-- "settimana" / "mese" → date range query
-- "Massimo" / "Milano" / "Bardonecchia" / "Torino" → property reference
+## Trigger Phrases — ANY Language
+
+### Italian 🇮🇹
+- `prenotazioni`, `quante prenotazioni`, `prenotazioni questa settimana`
+- `chi arriva`, `chi arriva oggi`, `chi arriva questa settimana`
+- `chi parte`, `chi parte oggi`
+- `ospiti`, `quanti ospiti`
+- `check-in`, `check-out`
+- `settimana`, `mese`, `oggi`
+- `Milano`, `Bardonecchia`, `Torino`, `Drovetti`, `Giacinto`
+- `quanto ho guadagnato`, `entrate`, `ricavi`, `revenue`
+- `Massimo` (when asking property questions)
+- `casa`, `appartamento`, `affitti`
+
+### English 🇬🇧
+- `booking`, `bookings`, `how many bookings`
+- `check-in`, `check-out`
+- `guests`, `who's arriving`, `who's leaving`
+- `reservation`, `reservations`
+- `this week`, `today`, `this month`
+- `revenue`, `earnings`, `income`
+- Any property name: `Milan`, `Bardonecchia`, `Drovetti`, `Giacinto`
 
 **Do not wait for English. Do not ask for clarification. Just run the script.**
 
-## ⚡ Primary Method — Use hospitable.py
+---
 
-For ALL reservation queries, run `~/.openclaw/workspace/hospitable.py`. Do NOT craft raw curl commands for reservations.
+## Usage Examples
 
 ```bash
-# Today's check-ins and check-outs
+# Today's check-ins and check-outs (default: today)
 python3 ~/.openclaw/workspace/hospitable.py
 
-# Specific day
+# Specific single day
 python3 ~/.openclaw/workspace/hospitable.py 2026-02-19
 
 # Date range (all reservations grouped by property)
-python3 ~/.openclaw/workspace/hospitable.py 2026-02-01 2026-03-31
+python3 ~/.openclaw/workspace/hospitable.py 2026-02-17 2026-02-23
 
 # This week example
 python3 ~/.openclaw/workspace/hospitable.py 2026-02-17 2026-02-23
+
+# Full month
+python3 ~/.openclaw/workspace/hospitable.py 2026-02-01 2026-02-28
 ```
 
-## Properties
-| Short ID | Full UUID | Name |
-|----------|-----------|------|
-| cd4bf5fb | cd4bf5fb-16ef-49c8-b3db-93437e5f009f | Milano |
-| 912db8e2 | 912db8e2-ef92-44fa-b257-6f843c87e520 | Bardonecchia |
-| ec148f18 | ec148f18-8c8a-456b-8bd9-b86e1c4086f9 | Drovetti (Turin) |
-| 4cb5b686 | 4cb5b686-ed1e-470c-90e8-e50500b0d77a | Giacinto Collegno (Turin) |
+---
+
+## Property ID Mapping
+
+| Name | Full UUID |
+|------|-----------|
+| Milano (Viale Brianza) | `cd4bf5fb-16ef-49c8-b3db-93437e5f009f` |
+| Bardonecchia (Via Melezet) | `912db8e2-ef92-44fa-b257-6f843c87e520` |
+| Drovetti (Via Drovetti, Torino) | `ec148f18-8c8a-456b-8bd9-b86e1c4086f9` |
+| Giacinto Collegno (Via Collegno, Torino) | `4cb5b686-ed1e-470c-90e8-e50500b0d77a` |
+
+Always translate UUIDs and reservation codes to human-readable names. Never show raw UUIDs alone.
+
+---
+
+## Workflow
+
+1. **Run the script first** — always
+2. **Parse the output** — it gives property name, guest name, dates, nights, guests count
+3. **Summarize in Lorenzo's language** — Italian if he asked in Italian
+4. **Be concise** — 1-2 sentences via TTS
+
+---
+
+## Output Format (from script)
+
+The script returns grouped results:
+```
+🏡 Property Name (N reservation(s))
+YYYY-MM-DD → YYYY-MM-DD  Guest Name  (Xn · Yg · #CODE · platform)
+```
+
+Fields: `nights (Xn)`, `guests (Yg)`, `reservation code (#...)`, `platform (airbnb/booking/manual)`
+
+---
+
+## Revenue Report
+
+```bash
+python3 ~/.openclaw/workspace/revenue.py
+```
+
+---
 
 ## Raw API (advanced use only)
 
 Token: `cat ~/.openclaw/workspace/hospitable_token.txt`
 
 ```bash
-TOKEN=$(cat ~/.openclaw/workspace/hospitable_token.txt) && curl -sg "https://public.api.hospitable.com/v2/properties" -H "Authorization: Bearer $TOKEN" -H "Accept: application/json"
+TOKEN=$(cat ~/.openclaw/workspace/hospitable_token.txt)
+curl -sg "https://public.api.hospitable.com/v2/properties" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Accept: application/json"
 ```
 
+---
+
 ## Rules
-- **Always use hospitable.py for reservation queries** — it handles auth, property names, guest names, and date filtering automatically.
-- **Respond in the same language Lorenzo used** — if he asked in Italian, answer in Italian.
-- Confirm before sending any guest messages.
-- The script can be imported: `from hospitable import get_reservations` returns a list of dicts with `_property_name`, `guest`, `arrival_date`, `departure_date`, `nights`, `guests`, `code`, `platform`.
+
+- **ALWAYS run hospitable.py first** — never answer from cached/remembered data
+- **Respond in the same language Lorenzo used** — Italian question → Italian answer
+- **Confirm before sending any guest messages**
+- **Never show raw UUIDs** — always use property names
+- The script can be imported: `from hospitable import get_reservations` returns dicts with `_property_name`, `guest`, `arrival_date`, `departure_date`, `nights`, `guests`, `code`, `platform`
