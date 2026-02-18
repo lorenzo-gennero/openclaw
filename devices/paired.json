@@ -34,9 +34,9 @@
     "deviceId": "9803906905268e7bf936bf508e1d079018af1ca8c631df7eeb7dcaef6d35c061",
     "publicKey": "HLz0PqykkT1zxeMNLXPxqCGQxAKC_iyNBvE9m6cWpV4",
     "platform": "darwin",
-    "clientId": "node-host",
-    "clientMode": "node",
-    "role": "node",
+    "clientId": "gateway-client",
+    "clientMode": "backend",
+    "role": "operator",
     "roles": [
       "operator",
       "node"
@@ -67,6 +67,6 @@
     },
     "createdAtMs": 1771326690696,
     "approvedAtMs": 1771436564812,
-    "displayName": "Lorenzo-MacBook"
+    "displayName": "agent"
   }
 }
