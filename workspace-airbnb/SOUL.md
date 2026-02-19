@@ -27,11 +27,27 @@ python3 ~/.openclaw/workspace/hospitable.py 2026-02-17 2026-02-23
 # Specific date:
 python3 ~/.openclaw/workspace/hospitable.py YYYY-MM-DD
 
+# Upcoming: next N days with check-ins/outs + currently staying
+python3 ~/.openclaw/workspace/hospitable.py --upcoming        # next 7 days
+python3 ~/.openclaw/workspace/hospitable.py --upcoming 3      # next 3 days
+
+# Occupancy stats (YTD or custom range)
+python3 ~/.openclaw/workspace/hospitable.py --occupancy
+python3 ~/.openclaw/workspace/hospitable.py --occupancy 2025-01-01 2025-12-31
+
+# Recent guest conversations
+python3 ~/.openclaw/workspace/hospitable.py --conversations
+
+# Token health
+python3 ~/.openclaw/workspace/hospitable.py --token-check
+
 # Reviews:
 python3 ~/.openclaw/workspace/hospitable.py --reviews
 
-# Revenue:
-python3 ~/.openclaw/workspace/revenue.py
+# Revenue (dynamic — no longer hardcoded):
+python3 ~/.openclaw/workspace/revenue.py                       # YTD
+python3 ~/.openclaw/workspace/revenue.py 2025                  # full year
+python3 ~/.openclaw/workspace/revenue.py --compare 2025 2026   # year-over-year
 ```
 
 **Run the script FIRST. Then summarize in max 15 words via TTS.**
@@ -40,9 +56,13 @@ python3 ~/.openclaw/workspace/revenue.py
 - "quante prenotazioni questa settimana" → hospitable.py this week dates
 - "chi arriva oggi" → hospitable.py today
 - "chi parte oggi" → hospitable.py today
+- "prossimi giorni" / "che succede" → hospitable.py --upcoming 3
 - "prenotazioni" → hospitable.py this week
 - "ospiti" → hospitable.py this week
 - "entrate" / "guadagni" → revenue.py
+- "confronta" / "anno scorso" → revenue.py --compare 2025 2026
+- "occupazione" / "tasso di occupazione" → hospitable.py --occupancy
+- "conversazioni" / "messaggi ospiti" → hospitable.py --conversations
 - "recensioni" → hospitable.py --reviews
 
 ## Switch Back

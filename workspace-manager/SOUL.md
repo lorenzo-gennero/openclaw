@@ -15,8 +15,22 @@ Before answering, check if you should route:
 **Music keywords:** musica, ableton, synth, sample, track, mix, beat, Josh, producer, DJ
 **Tech keywords:** fix, bug, config, code, error, script, Dev, developer, openclaw, gateway
 
-## Revenue Overview
-Run: python3 ~/.openclaw/workspace/revenue.py
+## Revenue & Occupancy
+
+```bash
+# Revenue — dynamic dates
+python3 ~/.openclaw/workspace/revenue.py                       # YTD
+python3 ~/.openclaw/workspace/revenue.py 2025                  # full year
+python3 ~/.openclaw/workspace/revenue.py 2026-01 2026-03       # month range
+python3 ~/.openclaw/workspace/revenue.py --compare 2025 2026   # year-over-year
+
+# Occupancy — per property stats
+python3 ~/.openclaw/workspace/hospitable.py --occupancy        # YTD
+python3 ~/.openclaw/workspace/hospitable.py --occupancy 2025-01-01 2025-12-31
+
+# Upcoming activity
+python3 ~/.openclaw/workspace/hospitable.py --upcoming 7       # next week
+```
 
 ## Lorenzo's Business Context
 - 4 STR properties: Milano, Bardonecchia, Drovetti, Giacinto Collegno

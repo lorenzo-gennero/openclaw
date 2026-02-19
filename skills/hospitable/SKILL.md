@@ -8,9 +8,47 @@ metadata:
 
 # Hospitable 🏠
 
-## ⚡ CRITICAL — Run BEFORE Answering ANY Property Question
+## CRITICAL — Run BEFORE Answering ANY Property Question
 
-**ALWAYS run `python3 ~/.openclaw/workspace/hospitable.py` before answering ANY question about properties, bookings, guests, check-ins, check-outs, or revenue. Never answer from memory. Never say you can't retrieve data.**
+**ALWAYS run the appropriate command before answering ANY question about properties, bookings, guests, check-ins, check-outs, revenue, or occupancy. Never answer from memory. Never say you can't retrieve data.**
+
+---
+
+## Commands
+
+```bash
+# Today's check-ins/check-outs (default: today)
+python3 ~/.openclaw/workspace/hospitable.py
+
+# Specific single day
+python3 ~/.openclaw/workspace/hospitable.py 2026-02-19
+
+# Date range (all reservations grouped by property)
+python3 ~/.openclaw/workspace/hospitable.py 2026-02-17 2026-02-23
+
+# Upcoming: next N days with check-ins/outs + currently staying
+python3 ~/.openclaw/workspace/hospitable.py --upcoming        # next 7 days
+python3 ~/.openclaw/workspace/hospitable.py --upcoming 3      # next 3 days
+
+# Occupancy: per-property stats (bookings, nights, %, avg rate)
+python3 ~/.openclaw/workspace/hospitable.py --occupancy                    # YTD
+python3 ~/.openclaw/workspace/hospitable.py --occupancy 2025-01-01 2025-12-31  # custom range
+
+# Conversations: recent guests with reservation/conversation IDs
+python3 ~/.openclaw/workspace/hospitable.py --conversations
+
+# Token health: validate API token + check expiry
+python3 ~/.openclaw/workspace/hospitable.py --token-check
+
+# Reviews
+python3 ~/.openclaw/workspace/hospitable.py --reviews
+
+# Revenue report (separate script)
+python3 ~/.openclaw/workspace/revenue.py                       # YTD
+python3 ~/.openclaw/workspace/revenue.py 2025                  # full year
+python3 ~/.openclaw/workspace/revenue.py 2026-01 2026-03       # month range
+python3 ~/.openclaw/workspace/revenue.py --compare 2025 2026   # year-over-year
+```
 
 ---
 
@@ -22,43 +60,26 @@ metadata:
 - `chi parte`, `chi parte oggi`
 - `ospiti`, `quanti ospiti`
 - `check-in`, `check-out`
-- `settimana`, `mese`, `oggi`
+- `settimana`, `mese`, `oggi`, `prossimi giorni`
 - `Milano`, `Bardonecchia`, `Torino`, `Drovetti`, `Giacinto`
 - `quanto ho guadagnato`, `entrate`, `ricavi`, `revenue`
+- `occupazione`, `tasso di occupazione`, `com'è l'occupazione`
+- `conversazioni`, `messaggi ospiti`
 - `Massimo` (when asking property questions)
 - `casa`, `appartamento`, `affitti`
 
 ### English 🇬🇧
 - `booking`, `bookings`, `how many bookings`
-- `check-in`, `check-out`
+- `check-in`, `check-out`, `upcoming`, `next few days`
 - `guests`, `who's arriving`, `who's leaving`
 - `reservation`, `reservations`
 - `this week`, `today`, `this month`
-- `revenue`, `earnings`, `income`
+- `revenue`, `earnings`, `income`, `compare`
+- `occupancy`, `occupancy rate`, `how full`
+- `conversations`, `guest messages`
 - Any property name: `Milan`, `Bardonecchia`, `Drovetti`, `Giacinto`
 
 **Do not wait for English. Do not ask for clarification. Just run the script.**
-
----
-
-## Usage Examples
-
-```bash
-# Today's check-ins and check-outs (default: today)
-python3 ~/.openclaw/workspace/hospitable.py
-
-# Specific single day
-python3 ~/.openclaw/workspace/hospitable.py 2026-02-19
-
-# Date range (all reservations grouped by property)
-python3 ~/.openclaw/workspace/hospitable.py 2026-02-17 2026-02-23
-
-# This week example
-python3 ~/.openclaw/workspace/hospitable.py 2026-02-17 2026-02-23
-
-# Full month
-python3 ~/.openclaw/workspace/hospitable.py 2026-02-01 2026-02-28
-```
 
 ---
 
@@ -96,14 +117,6 @@ Fields: `nights (Xn)`, `guests (Yg)`, `reservation code (#...)`, `platform (airb
 
 ---
 
-## Revenue Report
-
-```bash
-python3 ~/.openclaw/workspace/revenue.py
-```
-
----
-
 ## Raw API (advanced use only)
 
 Token: `cat ~/.openclaw/workspace/hospitable_token.txt`
@@ -123,4 +136,4 @@ curl -sg "https://public.api.hospitable.com/v2/properties" \
 - **Respond in the same language Lorenzo used** — Italian question → Italian answer
 - **Confirm before sending any guest messages**
 - **Never show raw UUIDs** — always use property names
-- The script can be imported: `from hospitable import get_reservations` returns dicts with `_property_name`, `guest`, `arrival_date`, `departure_date`, `nights`, `guests`, `code`, `platform`
+- The script can be imported: `from hospitable import get_reservations, show_upcoming, show_occupancy`
