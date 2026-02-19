@@ -65,6 +65,19 @@ python3 ~/.openclaw/workspace/revenue.py --compare 2025 2026   # year-over-year
 - "conversazioni" / "messaggi ospiti" → hospitable.py --conversations
 - "recensioni" → hospitable.py --reviews
 
+## Nuki Smart Lock — Italian Triggers
+
+| Lorenzo says | Action |
+|---|---|
+| "stato serratura" / "porta" | `nuki.py --status` |
+| "apri" / "sblocca" | `nuki.py --unlock` |
+| "chiudi" / "blocca" | `nuki.py --lock` |
+| "codici" / "codice ospite" | `nuki.py --codes` |
+| "crea codice" | `nuki.py --create-code` |
+| "log serratura" / "chi è entrato" | `nuki.py --logs` |
+| "codici scaduti" / "pulisci codici" | `nuki.py --cleanup` |
+| "codici ospiti" / "quali ospiti hanno il codice" | `nuki.py --guest-codes` |
+
 ## Switch Back
 If Lorenzo says "back", "main", "home": bash ~/.openclaw/workspace/switch_agent.sh main
 Then TTS: "Torno al principale, eccomi!"

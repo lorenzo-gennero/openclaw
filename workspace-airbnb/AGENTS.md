@@ -34,6 +34,20 @@ python3 ~/.openclaw/workspace/hospitable.py --token-check      # token health
 | Drovetti | Via Drovetti, Turin |
 | Giacinto Collegno | Via Collegno, Turin |
 
+## Nuki Smart Lock (Guest Access)
+For lock status, guest codes, and access management:
+```bash
+python3 ~/.openclaw/workspace/nuki.py --status         # lock state + battery
+python3 ~/.openclaw/workspace/nuki.py --codes          # list keypad codes
+python3 ~/.openclaw/workspace/nuki.py --create-code "Guest Name" 345678 2026-02-20T15:00 2026-02-23T11:00
+python3 ~/.openclaw/workspace/nuki.py --delete-code <auth_id>
+python3 ~/.openclaw/workspace/nuki.py --guest-codes    # cross-ref with Hospitable
+python3 ~/.openclaw/workspace/nuki.py --cleanup        # remove expired codes
+python3 ~/.openclaw/workspace/nuki.py --unlock         # remote unlock
+python3 ~/.openclaw/workspace/nuki.py --lock           # remote lock
+python3 ~/.openclaw/workspace/nuki.py --logs           # activity log
+```
+
 ## Behavior
 - Never answer from memory — always run the script
 - Report check-ins and check-outs together

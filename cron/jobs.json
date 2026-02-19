@@ -70,8 +70,36 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Good morning Lorenzo! Give a brief morning update:\n1. Run `python3 ~/.openclaw/workspace/hospitable.py --upcoming 3` for the next 3 days of check-ins/check-outs.\n2. Run `curl -s 'wttr.in/Turin?format=j1'` for weather.\n3. Send a Telegram message in Italian: greet, summarize today's check-ins/outs, mention weather. Keep it concise (max 8 lines).",
+        "message": "Good morning Lorenzo! Give a brief morning update:\n1. Run `python3 ~/.openclaw/workspace/hospitable.py --upcoming 3` for the next 3 days of check-ins/check-outs.\n2. Run `python3 ~/.openclaw/workspace/nuki.py --status` to check lock state and battery. Flag if unlocked or battery low.\n3. Run `curl -s 'wttr.in/Turin?format=j1'` for weather.\n4. Send a Telegram message in Italian: greet, summarize today's check-ins/outs, lock status (only if issues), mention weather. Keep it concise (max 10 lines).",
         "timeoutSeconds": 90
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "telegram",
+        "to": "7906179714"
+      },
+      "state": {}
+    },
+    {
+      "id": "a3b7e1f0-4c9d-4f8a-b2e6-8d1f3a5c7e90",
+      "agentId": "main",
+      "sessionKey": "agent:main:nuki-cleanup",
+      "name": "Nuki Code Cleanup",
+      "enabled": false,
+      "notify": true,
+      "createdAtMs": 1771600000000,
+      "updatedAtMs": 1771600000000,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 12 * * *",
+        "tz": "Europe/Rome"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run `python3 ~/.openclaw/workspace/nuki.py --cleanup` to remove expired guest keypad codes. Report what was removed (if anything) via Telegram in Italian, one line.",
+        "timeoutSeconds": 60
       },
       "delivery": {
         "mode": "announce",

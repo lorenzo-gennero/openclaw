@@ -76,6 +76,60 @@ curl -sg "https://public.api.hospitable.com/v2/reservations?properties%5B%5D=cd4
 
 ---
 
+## Section 1b: Nuki Smart Lock Integration
+
+**Token path:** `~/.openclaw/workspace/nuki_token.txt`
+**Script path:** `python3 ~/.openclaw/workspace/nuki.py`
+
+### CRITICAL: Run nuki.py for ANY Lock/Door Question in ANY Language
+
+When Lorenzo asks ANYTHING about locks, doors, access codes, guest keys — **in any language** — IMMEDIATELY run the script.
+
+```bash
+# Lock status + battery (default)
+python3 ~/.openclaw/workspace/nuki.py
+
+# Unlock / Lock
+python3 ~/.openclaw/workspace/nuki.py --unlock
+python3 ~/.openclaw/workspace/nuki.py --lock
+
+# Activity log
+python3 ~/.openclaw/workspace/nuki.py --logs
+python3 ~/.openclaw/workspace/nuki.py --logs 50
+
+# Keypad codes
+python3 ~/.openclaw/workspace/nuki.py --codes
+
+# Create guest code
+python3 ~/.openclaw/workspace/nuki.py --create-code "Guest Name" 345678 2026-02-20T15:00 2026-02-23T11:00
+
+# Delete code
+python3 ~/.openclaw/workspace/nuki.py --delete-code <auth_id>
+
+# Remove expired codes
+python3 ~/.openclaw/workspace/nuki.py --cleanup
+
+# Cross-ref Hospitable guests with codes
+python3 ~/.openclaw/workspace/nuki.py --guest-codes
+
+# Token check
+python3 ~/.openclaw/workspace/nuki.py --token-check
+```
+
+### Italian Trigger Mapping (Nuki)
+
+| Lorenzo says | Action |
+|---|---|
+| "stato serratura" / "porta" | `nuki.py --status` |
+| "apri" / "sblocca" | `nuki.py --unlock` |
+| "chiudi" / "blocca" | `nuki.py --lock` |
+| "codici" / "codice ospite" | `nuki.py --codes` |
+| "log serratura" / "chi è entrato" | `nuki.py --logs` |
+| "crea codice" / "codice per [nome]" | `nuki.py --create-code` |
+| "batteria serratura" | `nuki.py --status` |
+
+---
+
 ## Section 2: Agent Switching — Full Mapping
 
 When Lorenzo says one of the trigger words (alone or in context), immediately run the switch command and confirm with TTS.
