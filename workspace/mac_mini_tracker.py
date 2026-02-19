@@ -324,21 +324,77 @@ def _scrape_kleinanzeigen(html: str) -> list[dict]:
         })
     return listings
 
+# -- Listing Filter -----------------------------------------------------------
+
+# Accessory / irrelevant keywords (lowercase) — if title contains any, skip it
+EXCLUDE_KEYWORDS = [
+    "dock", "docking", "hub", "adapter", "kabel", "cable",
+    "mikrofon", "microphone", "gehäuse", "case", "tasche", "bag",
+    "halterung", "mount", "ladegerät", "charger", "ständer", "stand",
+    "netzteil", "power adapter", "ssd gehäuse", "ssd-gehäuse",
+    "wacom", "monitor", "gaming pc",
+    "suche", "ankauf",
+]
+
+# Non-Mac-Mini products that show up in search results
+EXCLUDE_PRODUCTS = [
+    "macbook", "mac book", "mac pro", "mac studio", "imac",
+]
+
+# Listings where the primary product is NOT a Mac Mini (trade offers, etc.)
+EXCLUDE_PRIMARY = [
+    "asus nuc", "intel nuc", "gegen mac",
+]
+
+
+def _is_actual_mac_mini(listing: dict) -> bool:
+    """Return True only if the listing is an actual Mac Mini for sale."""
+    title = listing["title"].lower()
+
+    # Must contain "mac mini" or "macmini" somewhere
+    if "mac mini" not in title and "macmini" not in title:
+        return False
+
+    # Exclude accessories and irrelevant items
+    for kw in EXCLUDE_KEYWORDS:
+        if kw in title:
+            return False
+
+    # Exclude other Apple products that mention mac mini in passing
+    for prod in EXCLUDE_PRODUCTS:
+        if prod in title:
+            return False
+
+    # Exclude trade offers where Mac Mini isn't the product being sold
+    for pat in EXCLUDE_PRIMARY:
+        if pat in title:
+            return False
+
+    return True
+
 # -- Helpers ------------------------------------------------------------------
 
 def _parse_price(text: str) -> int:
-    """Extract price in cents from text like '449,00', '€ 499', '449.00 EUR'."""
+    """Extract price in cents from text like '449,00', '€ 499', '1.149 EUR'."""
     text = text.replace("\xa0", " ").replace("VB", "").replace("VHB", "").strip()
     # Match numbers with optional comma/dot decimals
     m = re.search(r"(\d[\d.,]*\d|\d+)", text)
     if not m:
         return 0
     num_str = m.group(1)
-    # European format: 1.234,56 or 1234,56
+    # European format: 1.234,56 → has both dot and comma, dot is thousands
     if "," in num_str and "." in num_str:
         num_str = num_str.replace(".", "").replace(",", ".")
     elif "," in num_str:
+        # 449,00 or 1234,56 — comma is decimal separator
         num_str = num_str.replace(",", ".")
+    elif "." in num_str:
+        # Could be 1.149 (German thousands) or 449.00 (decimal)
+        # If there's exactly one dot and 3 digits after it, treat as thousands separator
+        parts = num_str.split(".")
+        if len(parts) == 2 and len(parts[1]) == 3:
+            num_str = num_str.replace(".", "")  # 1.149 → 1149
+        # Otherwise keep as decimal (e.g. 449.00)
     try:
         return int(float(num_str) * 100)
     except ValueError:
@@ -393,8 +449,9 @@ def run(show_all: bool = False):
         else:
             listings = []
 
-        print(f"  Found {len(listings)} listing(s).")
-        for lst in listings:
+        filtered = [l for l in listings if _is_actual_mac_mini(l)]
+        print(f"  Found {len(listings)} listing(s), {len(filtered)} actual Mac Mini(s).")
+        for lst in filtered:
             is_new = _upsert(db, lst)
             all_listings.append(lst)
             if is_new:
