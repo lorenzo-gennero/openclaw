@@ -1,10 +1,36 @@
+# Secrets and auth
+.env
+openclaw.json
+devices/
+identity/
+credentials/
+exec-approvals.json
+exec-approvals.sock
+
+# Agent auth and sessions
 agents/*/agent/auth.json
 agents/*/agent/auth-profiles.json
 agents/*/sessions/
+
+# Runtime state
+node.json
+telegram/
+cron/runs/
+delivery-queue/
+subagents/runs.json
+memory/
+
+# Backups
 *.bak
+*.bak.*
+*.bak[0-9]*
+
+# Workspaces
 workspace/
-credentials/
+workspace-*/
+
+# Misc
 logs/
-.env
-.DS_Store
 media/
+.DS_Store
+*.tmp

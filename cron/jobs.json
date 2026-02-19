@@ -4,11 +4,11 @@
     {
       "id": "7dc83dd4-d88e-44e7-9402-9a6e1961fc40",
       "agentId": "main",
-      "name": "Daily Check-ins and Check-outs",
+      "name": "Daily Airbnb Briefing",
       "enabled": true,
       "notify": true,
       "createdAtMs": 1771346683329,
-      "updatedAtMs": 1771398027337,
+      "updatedAtMs": 1771492742172,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -18,14 +18,37 @@
       "wakeMode": "now",
       "payload": {
         "kind": "systemEvent",
-        "text": "Reminder: Today's check-ins and check-outs include the property names."
+        "text": "Daily 8am briefing: Run `python3 ~/.openclaw/workspace/hospitable.py` for today's date, get check-ins and check-outs, then report via TTS in Italian. Keep it under 15 words."
       },
       "state": {
-        "nextRunAtMs": 1771484400000,
-        "lastRunAtMs": 1771398000040,
+        "nextRunAtMs": 1771570800000,
+        "lastRunAtMs": 1771484400033,
         "lastStatus": "ok",
-        "lastDurationMs": 27297,
+        "lastDurationMs": 21293,
         "consecutiveErrors": 0
+      }
+    },
+    {
+      "id": "1c68733c-9d77-4c21-b2ea-f3f021220447",
+      "agentId": "main",
+      "sessionKey": "agent:main:main",
+      "name": "Weekly Revenue Summary",
+      "enabled": true,
+      "createdAtMs": 1771492745287,
+      "updatedAtMs": 1771492745287,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 19 * * 0",
+        "tz": "Europe/Vienna"
+      },
+      "sessionTarget": "main",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "systemEvent",
+        "text": "Weekly Sunday briefing: Run `python3 ~/.openclaw/workspace/revenue.py`, summarize total weekly revenue via TTS in Italian. Max 15 words."
+      },
+      "state": {
+        "nextRunAtMs": 1771783200000
       }
     }
   ]
