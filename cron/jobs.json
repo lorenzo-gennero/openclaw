@@ -50,6 +50,34 @@
       "state": {
         "nextRunAtMs": 1771783200000
       }
+    },
+    {
+      "id": "95652e93-2ff2-4e3e-855b-a4fa97f04855",
+      "agentId": "main",
+      "name": "Morning Briefing",
+      "enabled": true,
+      "createdAtMs": 1771532479726,
+      "updatedAtMs": 1771532479726,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 7 * * *",
+        "tz": "Europe/Rome"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Good morning Lorenzo\\! Give a brief morning update: 1) Run hospitable.py to check today's check-ins and check-outs. 2) Run curl -s wttr.in/Turin?format=j1 for weather. 3) Summarize in a short voice message with the tts tool.",
+        "timeoutSeconds": 60
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "telegram",
+        "to": "7906179714"
+      },
+      "state": {
+        "nextRunAtMs": 1771567200000
+      }
     }
   ]
 }

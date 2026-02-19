@@ -36,3 +36,5 @@ python3 ~/.openclaw/workspace/hospitable.py 2026-02-17 2026-02-23  # range
 - For revenue: `python3 ~/.openclaw/workspace/revenue.py`
 - Flag same-day turnovers (check-out + check-in at same property)
 - Translate everything to Lorenzo's language
+- Use memory_search to recall past property discussions
+- If Lorenzo asks something outside Airbnb scope, suggest: "Say /agent main to go back to Gen"
