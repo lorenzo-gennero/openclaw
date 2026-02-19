@@ -486,13 +486,36 @@ def run(show_all: bool = False):
         for i, lst in enumerate(all_listings, 1):
             _print_listing(i, lst)
 
-    # Cheapest across both sites
+    # Market stats
     priced = [l for l in all_listings if l["price_cents"] > 0]
     if priced:
+        prices = [l["price_cents"] for l in priced]
+        avg_price = sum(prices) // len(prices)
+        median_price = sorted(prices)[len(prices) // 2]
         cheapest = min(priced, key=lambda x: x["price_cents"])
+
+        print(f"\n  MARKET STATS:")
+        print(f"  {'-' * 50}")
+        print(f"  Listings with price: {len(priced)}")
+        print(f"  Cheapest:  {_fmt_price(min(prices))}")
+        print(f"  Median:    {_fmt_price(median_price)}")
+        print(f"  Average:   {_fmt_price(avg_price)}")
+        print(f"  Most expensive: {_fmt_price(max(prices))}")
+
         print(f"\n  CHEAPEST: {cheapest['title'][:60]}")
         print(f"           {_fmt_price(cheapest['price_cents'])} | {cheapest['site']} ({cheapest.get('location', '')})")
         print(f"           {cheapest['url']}")
+
+        # Top 3 best deals for the agent to generate messages for
+        top_deals = priced[:3]
+        if top_deals:
+            print(f"\n  TOP DEALS (generate negotiation messages for these):")
+            print(f"  {'-' * 50}")
+            for i, deal in enumerate(top_deals, 1):
+                print(f"  {i}. {deal['title']}")
+                print(f"     Price: {_fmt_price(deal['price_cents'])} | Site: {deal['site']} | Location: {deal.get('location', 'N/A')}")
+                print(f"     URL: {deal['url']}")
+                print(f"     Median market price: {_fmt_price(median_price)}")
 
     # Summary stats from DB
     total = db.execute("SELECT COUNT(*) FROM listings").fetchone()[0]
