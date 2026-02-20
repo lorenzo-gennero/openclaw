@@ -1,8 +1,9 @@
 # Lorenzo's Guest Messaging Style Guide
 
-> Derived from 5,625 real host messages across 1,430 reservations (all-time).
-> Properties: Drovetti (2,624 msgs), Milano (2,273), Giacinto Collegno (387), Bardonecchia (341).
-> ~60% English, ~20% Italian, ~20% bilingual/ambiguous. Avg message length: 310 chars.
+> Derived from 23,153 messages (13,192 host + 9,961 guest) across 1,430 reservations (2021-2026).
+> Properties: Drovetti (4,889 host), Milano (3,739), Giacinto Collegno (3,458), Bardonecchia (1,106).
+> Host breakdown: Lorenzo (5,625), Donatella (7,218). ~60% English, ~20% Italian, ~20% bilingual.
+> **762 YouTube video sends, 725 Hostfully guide sends analyzed.**
 
 ---
 
@@ -128,55 +129,108 @@ Lorenzo
 
 ### 2. Check-in Instructions (515 messages)
 
-**English — Milano (Nuki code):**
+**English — Milano (Nuki code + Hostfully, 48x):**
 ```
 Dear [Name],
 
-I look forward to welcoming you!
+1. Please send us a message on this chat 20 minutes before your arrival
+2. Your code for the keypad is 196767 the apartment is on the 7th (top floor)
+3. You will find two keys on the table: one for the outdoor building and one for the trash bin.
+4. No key is provided for the apartment, to lock the door you can press the arrow key.
 
-This video will guide you through the check-in:
-[checkin_video]
+One minute video showing you the Check-In:
+https://youtu.be/VWsDkN7Zwus
 
-The code for the door will be [code]
+I've also created an electronic house manual for your viewing pleasure:
+https://v2.hostfully.com/gjmkcxh/recommendations/places_to_eat
+It has all the info you'd want: nice food spots nearby, how to use the appliances, etc.
 
 Kind regards,
 Lorenzo
 ```
 
-**English — Drovetti (lockbox + remote buzzer):**
+**English — Drovetti (lockbox + remote buzzer + Hostfully, 118x):**
 ```
 Dear [Name],
 
-Check-in instructions:
+1. Please send us a message 20 minutes on this chat before your arrival so that we can prepare to buzz you in remotely.
+2. You will find your keys in the Master lock the code will be 3006
+Once you inserted the code twist the knob to open it.
 
-1) Please notify us 20 minutes before your arrival via the chat so we can be ready to open the building door remotely.
+This video will guide you through the check in:
+https://youtu.be/k0ExFJAwdYY
 
-2) Inside the building you can pick up the keys from the lockbox. The code is: [lockbox_code]
-Once you enter the code, turn the knob to open it.
-
-You'll find all check-in information in this video:
-[checkin_video]
-
-If there's anything else you need, such as tips, directions, or anything at all, please don't hesitate to ask!
+I've also created an electronic house manual for your viewing pleasure:
+https://v2.hostfully.com/gwznxzs/recommendations/activities
+It has all the info you'd want: you can find out how to open the door, turn on the hot water (house manual section), property address, nice food spots nearby, etc.
 
 Kind regards,
 Lorenzo
 ```
 
-**Italian — Drovetti:**
+**English — Giacinto Collegno (lockbox + remote buzzer + Hostfully):**
+```
+Dear [Name],
+
+1. Please send us a message 20 minutes before your arrival so that we can prepare to buzz you in remotely.
+2. You will find your keys in the Master lock the code will be 2709
+Once you inserted the code pull the lever to open it.
+
+This video will guide you through the check in:
+https://www.youtube.com/watch?v=sgj4z3YtONE
+
+I've also created an electronic house manual for your viewing pleasure:
+https://v2.hostfully.com/gnrsxkh/recommendations/places_to_eat
+
+Kind regards,
+Lorenzo
+```
+
+**English — Bardonecchia (lockbox, 27x):**
+```
+Dear [Name],
+
+This video will guide you through the check in:
+https://www.youtube.com/watch?v=YBYohemaAo8
+
+The code for the lockbox will be 3006
+
+I hope that you settle in alright and that you experience a 5-star stay :) Please let me know if there is anything you need or if I can assist you in any way!
+
+All the best,
+Lorenzo
+```
+
+**Italian — Drovetti (164x):**
 ```
 Gentile [Name],
 
 Check-In:
 1) Avvisateci 20 minuti prima del vostro arrivo tramite la chat in modo da essere pronti ad aprirvi il portone condominiale da remoto.
 
-2) Dentro il condominio potrete ritirare le chiavi nel lockbox che avrà il seguente codice: [lockbox_code]
+2) Dentro il condominio potrete ritirare le chiavi nel lockbox che avrà il seguente codice: 3006
 Una volta inserito bisogna girare la manopola per aprirlo.
 
 Troverai tutte le informazioni per il Check-in nel seguente video:
-[checkin_video]
+https://youtu.be/F5uMElJKNUw
 
-Se c'è qualcos'altro di cui hai bisogno, ad esempio consigli, indicazioni o qualsiasi cosa, non esitare a chiedere!
+Ho anche creato una guida digitale della casa per voi:
+https://v2.hostfully.com/gwznxzs/recommendations/activities
+
+Cordiali saluti,
+Lorenzo
+```
+
+**Italian — Bardonecchia (33x):**
+```
+Gentile [Name],
+
+Ecco una veloce video spiegazione di come raggiungere il nostro appartamento:
+https://youtu.be/-S1LGzRrON8
+
+Se c'è qualcos'altro di cui hai bisogno, ad esempio consigli, indicazioni o qualsiasi dubbio sul tuo alloggio, faccelo sapere. Siamo molto felici di aiutarti e di farti vivere un'esperienza a 5 stelle.
+
+Il codice per l'appartamento sarà 3006
 
 Cordiali saluti,
 Lorenzo
@@ -256,7 +310,26 @@ Safe travels,
 Lorenzo
 ```
 
-**Italian:**
+**English — Bardonecchia (43x):**
+```
+Dear [Name],
+
+Thank you for staying with us!
+Your checkout time is tomorrow before 10:00 AM
+
+Please before check out:
+1. Leave the fridge empty and open.
+2. Clean the dishes and cutlery.
+3. Throw away the garbage (the baskets are on the way to Via Melezet)
+4. Close the door and leave the key inside the lockbox
+
+We wish you a good trip and goodbye!
+
+Safe travels,
+Lorenzo
+```
+
+**Italian — Drovetti/Giacinto (191x):**
 ```
 Gentile [Name],
 
@@ -265,12 +338,24 @@ Ricorda che il check-out è domani per le 10:00.
 Per cortesia prima del check-out:
 1. Pulire i piatti e le posate.
 2. Assicurarsi di aver spento tutte le luci e di aver chiuso tutte le finestre.
-3. Chiudere la porta a chiave e lasciare le chiavi [key_return_it].
+3. Chiudere la porta a chiave e lasciare le chiavi nel lockbox
 
 Vi auguro un buon viaggio e arrivederci!
 
 Buon viaggio,
 Lorenzo
+```
+
+**Italian — Milano (61x):**
+```
+Ricorda che il check-out è domani entro le 10:00. Grazie per aver soggiornato con noi!
+
+Per Cortesia prima del check out:
+1. Pulire i piatti e le posate.
+2. Assicurarsi di aver spento tutte le luci e l'aria condizionata e di aver chiuso tutte le finestre.
+3. Chiudere la porta a chiave e lasciare le chiavi sul tavolo
+
+Vi auguriamo un buon viaggio e arrivederci!
 ```
 
 ---
@@ -384,17 +469,236 @@ Quick replies are short, no formal greeting/closing needed. Match the guest's en
 
 ---
 
-## Problem / Complaint Handling
+## Problem Resolution — 5-Step Flow
 
-Lorenzo's approach to problems follows a consistent pattern:
+Lorenzo and Donatella follow a **consistent 5-step approach** for ALL problems:
 
-1. **Acknowledge immediately** — never ignore or dismiss
-2. **Apologize briefly** — "Sorry about that", not lengthy apologies
-3. **Offer solution or action** — "I'll contact the cleaning service", "I'll send a technician"
-4. **Never defensive** — even when the guest is wrong, redirect constructively
-5. **Turn it around** — if possible, still ask for review / leave positive impression
+### Step 1: Acknowledge immediately
+- "I'm sorry for the inconvenience" / "Mi dispiace per il disagio"
+- Never ignore or dismiss, always empathetic
 
-### Real Examples
+### Step 2: Provide self-service fix FIRST
+- Send video tutorial or specific instructions
+- "Check the switches on the right side of the door"
+- "The boiler button is next to the bathroom mirror"
+
+### Step 3: Offer escalation
+- "If you're unable to resolve it or prefer assistance, I'd be happy to stop by this afternoon"
+- "I will call the technician"
+
+### Step 4: Follow up
+- "Did you manage to solve the problem?"
+- "Hi [name], did everything work out?"
+
+### Step 5: Compensate when needed
+- Proactively offer refunds for real inconveniences
+- "Let me know how much you think is suitable as compensation and I will issue a refund"
+- Typical: 20-50 EUR for minor issues, 100-150 EUR for major issues, one night refund for serious problems
+
+---
+
+## Troubleshooting by Category — REAL Examples
+
+### A. ELECTRICITY / POWER OUTAGE
+
+**Milano — Full Protocol (3+ real occurrences):**
+
+**Real exchange (Katherine Smith, 2025):**
+> Guest: "Hello -- The power just went out when we were getting ready when my mom plugged in the blow dryer"
+>
+> Lorenzo: "Hi Katherine, Please check the switches on the right side of the door and ensure that they are all turned up. If everything is already in the correct position, you'll need to head down to the basement to reset the circuit. Here's a quick video tutorial to guide you through the process: https://youtu.be/Th1pxWFlLuU The code to access the key is 2709. If you're unable to resolve it or prefer assistance, I'd be happy to stop by this afternoon to help. Let me know what works best for you"
+
+**Real exchange (Ryan Vaske, 2025):**
+> Guest: "Hello! The power has gone out in the apartment. Could we receive assistance to get the power back on?"
+>
+> Donatella: "Ok. You have to go in the cellar of the building. I will send you here a video to drive you. First, get the back up keys in the lockbox outside the apartment door (2709 is the code)"
+> Donatella: "https://youtu.be/Th1pxWFlLuU"
+> Donatella: "Ryan, before to go in the cellar, check is is not just the panel that you have in the apartment (right inside apart door)"
+
+**Milano electricity protocol:**
+1. Check apartment switches on RIGHT side of door — ensure all turned UP
+2. If not fixed: get backup keys from lockbox outside apartment door (code 2709)
+3. Go to cellar via ground floor door behind lift
+4. Reset the circuit breaker
+5. Video: https://youtu.be/Th1pxWFlLuU
+6. Offer to come by if guest can't fix it
+7. Follow up: "Did you manage to put the electricity on again?"
+8. After resolved: "Please put the backup keys back in the lockbox"
+
+**Giacinto Collegno — Power issues:**
+> Guest: "No power"
+>
+> Donatella: "Check if the button on the left of the fridge, behind the Nespresso coffee machine is on"
+
+**Key: Giacinto Collegno has wall switches next to the fridge that control appliance power.**
+
+**Drovetti — Building-wide outage:**
+> Guest: "Purtroppo l'assenza di elettricita ci crea abbastanza disagio"
+>
+> Donatella: "Si certo. Gli altri condomini hanno confermato che manca in tutto il condominio. L'amministratore sta contattando il distributore energia."
+>
+> Next day: "Buongiorno. L'elettricita' e' gia' tornata. Il pulsante del boiler (interno bagno sulla destra) se era in ON dovrebbe essere gia' attivo."
+
+**Key: When area-wide, reassure it's not just their apartment. Contact building admin. Follow up when resolved.**
+
+---
+
+### B. AC / HEATING / CLIMATE
+
+**AC — How to turn on (Milano):**
+> Guest: "One question: how to turn on air conditioning?"
+>
+> Lorenzo: "Hi Zuri, https://www.youtube.com/watch?v=VWsDkN7Zwus you can find how to turn on the ac at the 50 second mark"
+
+**AC mode (Milano):**
+> Donatella: "Prova a schiacciare MODE sul display e selezionare il simbolo del fiocco di neve."
+
+**Heating — Central heating off at night (ALL Turin properties):**
+> Guest (Jim McNiel, Drovetti): "The towel rack is cold and we can't figure out how to increase the temp."
+>
+> Donatella: "It's a central heating for all the building. And in Turin region have to be off from 11pm to 5am. I'm sorry. If you move the radiators valves at 4 or 5 position, you will have warm fastly early the morning."
+
+**AC as heat pump (Giacinto Collegno):**
+> Guest: "It would be great if you could let me have a small fan heater - it's cold here"
+>
+> Lorenzo: "Unfortunately, we don't have a fan heater available, since you can turn on the AC and set it to the 'sun' icon to heat the apartment."
+
+> Guest: "Can I adjust the radiator because it's very cold in here. Also the AC is it only for cold air?"
+>
+> Donatella: "You can adjust the radiators. Probably the maid left them at zero. Just turn the knobs at 4 or 5"
+
+**AC/Climate — Drovetti:**
+> Guest: "Bonjour, nous n'arrivons pas à allumer la clim"
+>
+> Lorenzo sent: 1) "Hello, have you tried https://v2.hostfully.com/gwznxzs" 2) https://youtu.be/bo4tJ04uHy8
+
+**Key patterns:**
+- Turin: Central heating off 11pm-5am (building-controlled)
+- ALL properties: AC doubles as heat pump (sun icon = heat)
+- Radiator valves: adjust to 4 or 5
+- Milano: AC instructions in check-in video at 50-second mark
+- Drovetti: Link digital guide first, then video
+
+---
+
+### C. HOT WATER / BOILER
+
+**Bardonecchia — Electric boiler:**
+> Donatella: "L'interruttore del boiler a destra della porta del bagno deve stare su ON. Un paio di ore massimo e l'acqua calda per la doccia sara' ok. Lasciatelo pure su on per tutto il soggiorno."
+>
+> Lorenzo: "Una volta acceso ci vuole circa 1 ora perché ci sia acqua calda (visto che è da 80L)"
+
+**Bardonecchia boiler key facts:**
+- Electric 80L (Ariston Lydos Plus)
+- Switch on RIGHT side of bathroom door
+- Takes 1-2 hours to heat from cold
+- Leave ON for entire stay
+- 4 consecutive adult showers NOT possible
+
+**Drovetti — Boiler switch:**
+> Donatella: "Regarding the hot water: maybe you've switched off the boiler. The button is in the bathroom left side of the mirrow"
+>
+> Lorenzo (when switch was broken): sent technician, then updated guest: "the technician came and now the boiler works again! The physical switch is still broken and we are going to change it soon, but now the boiler has been directly connected to electricity, so it works."
+
+**Milano — Hot water:**
+> Guest self-resolved: "Ok sry our fault ;)) we saw the video but i didn't notice that's for the water"
+> Video: https://youtu.be/gMiZkQbm04c
+
+---
+
+### D. WIFI / INTERNET
+
+> Guest (Drovetti): reported WiFi not working
+>
+> Lorenzo: "Im really sorry about this inconvenience! I got off the line with the wifi provider and they are experiencing a malfunction in that area of Turin, I will let you know as soon as I know more. If you need mobile data you could use airalo. Hey, have you tried an eSIM? Get US$3 off your first eSIM data pack from Airalo. Use code LORENZ5261 when you sign up. https://ref.airalo.com/1z4y"
+
+**WiFi pattern:**
+1. Check with ISP if area-wide issue
+2. Offer Airalo eSIM as backup (referral code LORENZ5261)
+3. Schedule technician if hardware issue
+
+---
+
+### E. BUILDING EXIT (Milano)
+
+> Guest: "how do I get out of the building?"
+>
+> Lorenzo: "To exit the building (without keys) there is a button in front of the elevator downstairs that opens the condominium door. You can see where it is at the end of this video: https://youtu.be/VWsDkN7Zwus"
+
+> Lorenzo: "From inside you can open the main door with the white button in front of the elevator. To close the apartment door when you go out, just press the arrow on the keypad"
+
+---
+
+### F. SOFA BED
+
+**Milano (30 EUR surcharge):**
+> Guest: "is it possible to get the sofa bed made up for her"
+>
+> Donatella: "Just want to advice that the Mattress of this sofa is not as thick as a proper bed, but I've slept there and I've always found it comfortable. If you'd like us to prepare it, we'll charge 30 extra."
+>
+> Lorenzo: "I send you a video to open the sofa bed, that is already prepared. https://youtu.be/BLICzW5BnLU"
+> Later: "This video is how to close it https://youtu.be/BR-SsjCgqCY"
+
+**Drovetti (20 EUR surcharge):**
+> Lorenzo: "Yes, perfect! There is a 20 surcharge to set up the sofa bed with sheets. Typically, this is only applied when we host three guests"
+
+---
+
+### G. KEYS / LOCKBOX
+
+**Milano:**
+- No physical key for apartment (Nuki keypad, press arrow to lock)
+- Keypad code: 196767
+- Keys on table: building door + trash bin
+- Backup keys lockbox: outside apartment door, code 2709
+
+**Drovetti:**
+- "You will find your keys in the Master lock the code will be 3006. Once you inserted the code twist the knob to open it."
+- Keys: condominium door + apartment + garbage
+
+**Giacinto Collegno:**
+- "You will find your keys in the Master lock the code will be 2709. Once you inserted the code pull the lever to open it."
+- Lockbox on left side of apartment door
+
+---
+
+### H. LUGGAGE STORAGE
+
+**If no next guest:**
+> "You are welcome to leave your bags until [time]"
+
+**If next guest coming:**
+> Offer bags until noon, then recommend external storage
+
+**External options:**
+- Turin: Radical Storage near Porta Susa (~5 EUR/bag)
+- Milano: Kipoint at Milano Centrale, Stow Your Bags (400m)
+
+---
+
+### I. LATE CHECKOUT
+
+**If no next guest:**
+> "Since we have no guests checking in, you are welcome to stay until [time]"
+
+**If next guest:**
+> "Unfortunately we have new guests checking in, so we can't give you the possibility"
+> Offer luggage storage as alternative
+> Sometimes offer paid late checkout (30 EUR supplement)
+
+---
+
+### J. TOURIST TAX
+
+- Milano: Usually included in Airbnb price
+- Turin properties (Booking.com): NOT included, collected separately
+- Bardonecchia: NOT included, collected separately
+- Payment methods: Cash (leave on table), Satispay (Donatella 3391369993), PayPal, bank transfer, SumUp
+- Children often excluded from tax
+
+---
+
+## Problem / Complaint Handling — Quick Replies
 
 **Guest reports broken item:**
 > Guest: "Everything was great. Minor adjustments - the toilet brush was broken at arrival and the oven dirty. We broke a wine glass sorry"
@@ -425,6 +729,16 @@ Lorenzo's approach to problems follows a consistent pattern:
 > Guest: "Unfortunately, the link isn't working. I'm unable to fill out the form."
 >
 > Lorenzo: "Hi Youssra, so sorry! Here is the working link: [corrected_link]. Kind regards, Lorenzo"
+
+**Construction noise:**
+> Guest: "we would have appreciated if you informed us that it's renovation going on both inside and outside the house."
+>
+> Lorenzo: "I understand how frustrating and disruptive construction noise can be, and I am truly sorry that this has affected your stay. Unfortunately, the renovation work is being undertaken by the building's administration, and we were not informed in advance about their schedule."
+
+**Cleaning complaint:**
+> Guest (feedback about fridge and cobwebs)
+>
+> Lorenzo: "Thank you for your feedback. The fridge has always been left on but ill make sure the cleaning team gives it a deep clean, same with the cob webs. Let me know if you'd like us to arrange a cleaner to take care of these issues. Sorry for the inconvenience"
 
 ---
 
@@ -743,73 +1057,38 @@ Lorenzo's approach to problems follows a consistent pattern:
 
 ---
 
-## Troubleshooting — Video Solutions by Property
+## ALL YouTube Videos — Quick Reference
 
-When a guest reports a problem, check `guest_config.json` for the relevant troubleshooting video and include it in the reply. Always pair the video with a brief explanation.
+### Check-In Videos (762 total sends)
+| URL | Property | Sends | Language |
+|-----|----------|-------|----------|
+| https://youtu.be/k0ExFJAwdYY | Drovetti | 186 | English |
+| https://youtu.be/F5uMElJKNUw | Drovetti | 141 | Italian |
+| https://www.youtube.com/watch?v=sgj4z3YtONE | Giacinto Collegno | 137 | English |
+| https://youtu.be/VWsDkN7Zwus | Milano | 105 | English |
+| https://youtu.be/Z8Yjq42AAlA | Giacinto Collegno | 64 | Italian |
+| https://youtu.be/DtPWgIwZGfw | Milano (legacy) | 37 | English |
+| https://youtu.be/-S1LGzRrON8 | Bardonecchia | 37 | Italian |
+| https://www.youtube.com/watch?v=YBYohemaAo8 | Bardonecchia | 33 | English |
+| https://youtu.be/qm7YtDNaZoE | Milano | 12 | Italian |
 
-### Milano — Troubleshooting Videos
-| Problem | Video | Usage |
-|---------|-------|-------|
-| Sofa bed — how to open | https://youtu.be/BLICzW5BnLU | Guest needs extra sleeping space |
-| Sofa bed — how to close | https://youtu.be/BR-SsjCgqCY | Guest asks how to fold it back |
-| Hot water / shower not working | https://youtu.be/gMiZkQbm04c | Guest can't get hot water in shower |
-| Electricity tripped / power out | https://youtu.be/Th1pxWFlLuU | Power outage — cellar circuit breaker |
-| Elevator how-to | https://youtu.be/VWsDkN7Zwus | Guest can't operate elevator |
-| Check-in walkthrough | https://youtu.be/DtPWgIwZGfw | Main check-in video |
+### Troubleshooting Videos
+| URL | Property | Purpose |
+|-----|----------|---------|
+| https://youtu.be/Th1pxWFlLuU | Milano | Power outage — cellar circuit breaker fix |
+| https://youtu.be/BLICzW5BnLU | Milano | How to OPEN the sofa bed |
+| https://youtu.be/BR-SsjCgqCY | Milano | How to CLOSE the sofa bed |
+| https://youtu.be/gMiZkQbm04c | Milano | Hot water / shower instructions |
+| https://youtu.be/bo4tJ04uHy8 | Drovetti | AC/climate instructions |
 
-### Real Examples: How Lorenzo Handles Problems with Videos
-
-**Electricity tripped @ Milano (Samuel Soh, Feb 2025):**
-Lorenzo sent 3 quick messages in sequence:
-> 1. "Ok, you have to go in the cellar. First look at this video"
-> 2. https://youtu.be/Th1pxWFlLuU
-> 3. "You need to keep the back up keys that are in the lockbox outside the apartment door, on the right. The code is 2709. There you have the key to open the door back the lift (ground floor) and the cellar door."
->
-> Then followed up: "Hi Samuel, did you manage to put the electricity on again? Thank you for keeping us updated. Thank you!"
->
-> After resolved: "Please Samuel, thanks to put the back up keys in the lockbox. Grazie 😊"
-
-**Key pattern:** Video link first, then step-by-step instructions for accessing cellar (backup keys in lockbox code 2709, ground floor, cellar door). Always follow up to check if resolved.
-
-**Circuit breaker @ Milano (Jim Monroe, May 2022):**
-> Guest: "Going to throw in the towel. The machine powers automatically so there's not much i can do without unscrewing the side panel. The only other thing I can think that is an easy fix is if a circuit breaker was tripped."
->
-> Lorenzo: "All the circuit breakers should be on the left handside of the entrance door"
-
-**AC/climate not working @ Drovetti (Corentyn, June 2025):**
-> Guest: "Bonjour, nous n'arrivons pas à allumer la clim"
->
-> Lorenzo sent 2 messages:
-> 1. "Hello, have you tried https://v2.hostfully.com/gwznxzs"
-> 2. https://youtu.be/bo4tJ04uHy8
-
-**Key pattern:** Link to the digital guide first, then the specific video.
-
-**Boiler/hot water issue @ Drovetti (Olivier, May 2025):**
-> Lorenzo: "Thank you, yes try unplug it and plug it back in and also please send a video of what happens when you try turn the switch off"
->
-> After technician visit: "Good afternoon Olivier, the technician came and now the boiler works again! 👍 The physical switch is still broken and we are going to change it soon, but now the boiler has been directly connected to electricity, so it works. Have a lovely evening! 😊"
-
-**Key pattern:** Ask guest to try simple fix first + send video of issue. If unresolved, arrange technician and update guest.
-
-**Sofa bed @ Milano (Rachael Gray):**
-> Lorenzo: "I send you a video to open the sofa bed, that is already prepared. https://youtu.be/BLICzW5BnLU"
->
-> Later: "We are happy you like it. Let us know if you need more info. This video is how to close it https://youtu.be/BR-SsjCgqCY Enjoy your stay :)"
-
-**Area-wide power outage @ Drovetti (Corentyn, June 2025):**
-> Lorenzo: "Also the ice cream shop at the corner is without electricity! Hope it will come soon. Please, let us know when the electricity comes back! 🤞"
->
-> Guest: "L'électricité est revenue !!"
->
-> Lorenzo: "🎉🎉🎉"
-
-**Key pattern:** When it's an area-wide outage (not just the apartment), reassure the guest it's not just them, and ask them to update when it's back.
-
-**Electrical maintenance planned @ Drovetti (Andreea, April 2022):**
-> Lorenzo: "Wanted to give you a heads up that they are doing some electrical maintenance on our whole condominium on Wednesday from 1:30pm to 4:30pm so during this period there will be no electricity. I'm very sorry about this inconvenience but it is not up to us. Let me know if you need anything :)"
-
-**Key pattern:** Proactive notification with exact time window, apology, note that it's building-wide.
+### Hostfully Digital Guides (725 total sends)
+| URL | Property | Sends | Best for |
+|-----|----------|-------|----------|
+| https://v2.hostfully.com/gwznxzs/recommendations/activities | Drovetti | 279 | Main recommendations |
+| https://v2.hostfully.com/gjmkcxh/recommendations/places_to_eat | Milano | 209 | Restaurant recommendations |
+| https://v2.hostfully.com/gnrsxkh | Giacinto Collegno | 112 | Main guide |
+| https://v2.hostfully.com/gnrsxkh/recommendations/places_to_eat | Giacinto Collegno | 96 | Restaurant recommendations |
+| https://v2.hostfully.com/gqdmdtq | Bardonecchia | 20 | Main guide |
 
 ### Recommendations Links (Hostfully)
 When guests ask for tips, restaurants, or things to do, link the property's Hostfully guidebook:

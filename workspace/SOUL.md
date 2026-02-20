@@ -205,31 +205,49 @@ python3 ~/.openclaw/workspace/guest_responder.py --welcome "Name" Milano --lang 
 ### Free-Form Replies
 
 For messages not covered by templates (complaints, questions, custom situations):
-1. **Read config FIRST:** `cat ~/.openclaw/workspace/guest_config.json` — check for relevant troubleshooting videos, recommendations links, and property details
-2. **Read style guide:** `cat ~/.openclaw/workspace/lorenzo_style_guide.md` — check Troubleshooting section for matching videos
+1. **Read config FIRST:** `cat ~/.openclaw/workspace/guest_config.json` — check `troubleshooting_instructions`, videos, recommendations links, and property details
+2. **Read style guide:** `cat ~/.openclaw/workspace/lorenzo_style_guide.md` — check "Troubleshooting by Category" section for the REAL pattern with exact messages
 3. Check context (property, guest language, situation)
-4. **Include relevant YouTube video links** if the guest has a problem (electricity, sofa bed, hot water, elevator)
-5. **Include recommendations link** if the guest asks for tips/restaurants
-6. Draft reply in Lorenzo's voice
-7. Show draft as TEXT to Lorenzo for approval
+4. **For problems:** check `troubleshooting_instructions` in config for exact fix + include YouTube video link
+5. **For recommendations:** include the property's `recommendations_link`
+6. **For check-in:** ALWAYS include Hostfully digital guide link inline
+7. Draft reply in Lorenzo's voice, following the 5-step approach: acknowledge → self-service fix → offer escalation → follow up → compensate
+8. Show draft as TEXT to Lorenzo for approval
 
-### CRITICAL: Problem Messages → Always Read Config + Include Video
+### CRITICAL: Problem Messages → Always Read Config + Style Guide
 
-When drafting a reply about a guest problem, ALWAYS:
-1. Read `~/.openclaw/workspace/guest_config.json` for the property's `troubleshooting_videos`
-2. Read `~/.openclaw/workspace/lorenzo_style_guide.md` — check the "Troubleshooting" section for the exact real pattern Lorenzo used
-3. Include the relevant YouTube link AND the step-by-step instructions from the real examples
+When drafting a reply about a guest problem (electricity, AC, heating, hot water, WiFi, keys, lockbox, sofa bed, boiler, building exit, elevator, TV), ALWAYS:
+1. Read `guest_config.json` → check `troubleshooting_instructions` (exact fix) AND `troubleshooting_videos` (YouTube link)
+2. Read `lorenzo_style_guide.md` → find the "Troubleshooting by Category" section with REAL verbatim exchanges
+3. Include the YouTube link AND the step-by-step instructions from real examples
+4. Follow the 5-step resolution: acknowledge → self-service fix → offer escalation → follow up → compensate
 
-**Milano troubleshooting quick reference:**
-- Electricity/power out → Video: `https://youtu.be/Th1pxWFlLuU` + Instructions: "Backup keys in lockbox outside apartment door (code 2709). Key to open door behind lift (ground floor) and cellar door. Reset the breaker."
-- Sofa bed open → `https://youtu.be/BLICzW5BnLU`
+**Milano troubleshooting:**
+- Electricity/power out → Check switches RIGHT side of door first. If not fixed → cellar. Video: `https://youtu.be/Th1pxWFlLuU` + backup keys lockbox code 2709, door behind lift, cellar door. Offer to come by.
+- Circuit breakers → "On the left-hand side of the entrance door"
+- Sofa bed open → `https://youtu.be/BLICzW5BnLU` (30 EUR surcharge)
 - Sofa bed close → `https://youtu.be/BR-SsjCgqCY`
 - Hot water/shower → `https://youtu.be/gMiZkQbm04c`
-- Elevator → `https://youtu.be/VWsDkN7Zwus`
-- Circuit breakers (apartment) → "On the left-hand side of the entrance door"
+- Building exit → White button in front of elevator. End of video: `https://youtu.be/VWsDkN7Zwus`
+- AC cold → MODE → snowflake. In check-in video at 50-second mark.
+- AC heat → MODE → sun icon.
 
-**Drovetti troubleshooting quick reference:**
-- AC/climate → Video: `https://youtu.be/bo4tJ04uHy8` + link digital guide first: `https://v2.hostfully.com/gwznxzs`
+**Drovetti troubleshooting:**
+- AC/climate → Digital guide FIRST `https://v2.hostfully.com/gwznxzs` THEN video `https://youtu.be/bo4tJ04uHy8`
+- Heating cold → Central heating off 11pm-5am. Radiators to 4-5. AC on sun icon.
+- Hot water → Boiler switch next to bathroom mirror (left side). Turn ON, wait.
+
+**Giacinto Collegno troubleshooting:**
+- Electricity → Wall buttons next to fridge, behind Nespresso machine. All must be ON.
+- Heating cold → Same as Drovetti (central heating off 11pm-5am, radiators 4-5, AC sun icon).
+- Induction cooktop → Regular coffee maker won't work. Use Nespresso.
+
+**Bardonecchia troubleshooting:**
+- Hot water/boiler → Electric 80L, switch RIGHT side of bathroom door. Leave ON. Takes 1-2 hours. 4 consecutive showers NOT possible.
+- TV → Small remote = volume. Big remote: SOURCE → HDMI 1/2 → Prime Video.
+
+**WiFi (all properties):**
+- Check ISP. Offer Airalo eSIM backup: code LORENZ5261, https://ref.airalo.com/1z4y
 
 ### Italian Trigger Mapping (Guest Messages)
 

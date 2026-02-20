@@ -2,7 +2,7 @@
 """
 Guest Message Responder — "Respond Like Lorenzo"
 
-Template-based message generator trained on 5,625 real host messages.
+Template-based message generator trained on 23,153 real messages (5,625 host).
 
 Usage:
   python3 guest_responder.py --welcome <name> <property> [--lang it]
@@ -137,12 +137,17 @@ Lorenzo""",
                 "name": "milano_nuki",
                 "template": """Dear {name},
 
-I look forward to welcoming you!
+1. Please send us a message on this chat 20 minutes before your arrival
+2. Your code for the keypad is {code} the apartment is on the 7th (top floor)
+3. You will find two keys on the table: one for the outdoor building and one for the trash bin.
+4. No key is provided for the apartment, to lock the door you can press the arrow key.
 
-This video will guide you through the check-in:
+One minute video showing you the Check-In:
 {checkin_video}
 
-The code for the door will be {code}
+I've also created an electronic house manual for your viewing pleasure:
+{recommendations_link}
+It has all the info you'd want: nice food spots nearby, how to use the appliances, etc.
 
 Kind regards,
 Lorenzo""",
@@ -151,19 +156,49 @@ Lorenzo""",
                 "name": "drovetti_lockbox",
                 "template": """Dear {name},
 
-Check-in instructions:
+1. Please send us a message 20 minutes on this chat before your arrival so that we can prepare to buzz you in remotely.
+2. You will find your keys in the Master lock the code will be {lockbox_code}
+Once you inserted the code twist the knob to open it.
 
-1) Please notify us 20 minutes before your arrival via the chat so we can be ready to open the building door remotely.
-
-2) Inside the building you can pick up the keys from the lockbox. The code is: {lockbox_code}
-Once you enter the code, turn the knob to open it.
-
-You'll find all check-in information in this video:
+This video will guide you through the check in:
 {checkin_video}
 
-If there's anything else you need, such as tips, directions, or anything at all, please don't hesitate to ask!
+I've also created an electronic house manual for your viewing pleasure:
+{recommendations_link}
+It has all the info you'd want: you can find out how to open the door, turn on the hot water (house manual section), property address, nice food spots nearby, etc.
 
 Kind regards,
+Lorenzo""",
+            },
+            "Giacinto Collegno": {
+                "name": "giacinto_lockbox",
+                "template": """Dear {name},
+
+1. Please send us a message 20 minutes before your arrival so that we can prepare to buzz you in remotely.
+2. You will find your keys in the Master lock the code will be {lockbox_code}
+Once you inserted the code pull the lever to open it.
+
+This video will guide you through the check in:
+{checkin_video}
+
+I've also created an electronic house manual for your viewing pleasure:
+{recommendations_link}
+
+Kind regards,
+Lorenzo""",
+            },
+            "Bardonecchia": {
+                "name": "bardonecchia_lockbox",
+                "template": """Dear {name},
+
+This video will guide you through the check in:
+{checkin_video}
+
+The code for the lockbox will be {lockbox_code}
+
+I hope that you settle in alright and that you experience a 5-star stay :) Please let me know if there is anything you need or if I can assist you in any way!
+
+All the best,
 Lorenzo""",
             },
             "_default": {
@@ -183,12 +218,16 @@ Lorenzo""",
                 "name": "milano_nuki_it",
                 "template": """Gentile {name},
 
-Non vedo l'ora di darti il benvenuto!
+1. Mandaci un messaggio su questa chat 20 minuti prima del vostro arrivo
+2. Il codice per il tastierino sarà {code}, l'appartamento è al 7° piano (ultimo piano)
+3. Troverete due chiavi sul tavolo: una per il portone e una per i bidoni della spazzatura.
+4. Non viene fornita una chiave per l'appartamento, per chiudere la porta basta premere la freccia sul tastierino.
 
-Questo video ti guiderà nel check-in:
+Video di un minuto per il Check-In:
 {checkin_video}
 
-Il codice per la porta sarà {code}
+Ho anche creato una guida digitale della casa per voi:
+{recommendations_link}
 
 Cordiali saluti,
 Lorenzo""",
@@ -206,7 +245,41 @@ Una volta inserito bisogna girare la manopola per aprirlo.
 Troverai tutte le informazioni per il Check-in nel seguente video:
 {checkin_video}
 
-Se c'è qualcos'altro di cui hai bisogno, ad esempio consigli, indicazioni o qualsiasi cosa, non esitare a chiedere!
+Ho anche creato una guida digitale della casa per voi:
+{recommendations_link}
+
+Cordiali saluti,
+Lorenzo""",
+            },
+            "Giacinto Collegno": {
+                "name": "giacinto_lockbox_it",
+                "template": """Gentile {name},
+
+Check-In:
+1) Avvisateci 20 minuti prima del vostro arrivo tramite la chat in modo da essere pronti ad aprirvi il portone condominiale da remoto.
+
+2) Dentro il condominio potrete ritirare le chiavi nel lockbox che avrà il seguente codice: {lockbox_code}
+Una volta inserito bisogna tirare la levetta per aprirlo.
+
+Troverai tutte le informazioni per il Check-in nel seguente video:
+{checkin_video}
+
+Ho anche creato una guida digitale della casa per voi:
+{recommendations_link}
+
+Cordiali saluti,
+Lorenzo""",
+            },
+            "Bardonecchia": {
+                "name": "bardonecchia_lockbox_it",
+                "template": """Gentile {name},
+
+Ecco una veloce video spiegazione di come raggiungere il nostro appartamento:
+{checkin_video}
+
+Se c'è qualcos'altro di cui hai bisogno, ad esempio consigli, indicazioni o qualsiasi dubbio sul tuo alloggio, faccelo sapere. Siamo molto felici di aiutarti e di farti vivere un'esperienza a 5 stelle.
+
+Il codice per l'appartamento sarà {lockbox_code}
 
 Cordiali saluti,
 Lorenzo""",
@@ -260,8 +333,8 @@ Lorenzo""",
     },
 
     "checkout": {
-        "en": [
-            {
+        "en": {
+            "_default": {
                 "name": "standard",
                 "template": """Dear {name},
 
@@ -277,20 +350,27 @@ I wish you a good trip and goodbye!
 Safe travels,
 Lorenzo""",
             },
-            {
-                "name": "short",
-                "template": """Hi {name},
+            "Bardonecchia": {
+                "name": "bardonecchia",
+                "template": """Dear {name},
 
-Just a reminder — check-out is by 10:00 AM tomorrow.
+Thank you for staying with us!
+Your checkout time is tomorrow before 10:00 AM
 
-Please wash any dishes, turn off lights, close windows, and {key_return_instruction}.
+Please before check out:
+1. Leave the fridge empty and open.
+2. Clean the dishes and cutlery.
+3. Throw away the garbage (the baskets are on the way to Via Melezet)
+4. Close the door and leave the key inside the lockbox
 
-Safe travels!
+We wish you a good trip and goodbye!
+
+Safe travels,
 Lorenzo""",
             },
-        ],
-        "it": [
-            {
+        },
+        "it": {
+            "_default": {
                 "name": "standard",
                 "template": """Gentile {name},
 
@@ -306,7 +386,25 @@ Vi auguro un buon viaggio e arrivederci!
 Buon viaggio,
 Lorenzo""",
             },
-        ],
+            "Bardonecchia": {
+                "name": "bardonecchia_it",
+                "template": """Gentile {name},
+
+Grazie per aver soggiornato con noi!
+Il check-out è domani entro le 10:00.
+
+Per cortesia prima del check-out:
+1. Lasciare il frigo vuoto e aperto.
+2. Pulire i piatti e le posate.
+3. Buttare la spazzatura (i bidoni sono lungo Via Melezet)
+4. Chiudere la porta e lasciare la chiave nel lockbox
+
+Vi auguriamo un buon viaggio e arrivederci!
+
+Buon viaggio,
+Lorenzo""",
+            },
+        },
     },
 
     "post_stay": {
@@ -407,8 +505,8 @@ KEY_RETURN = {
         "it": "lasciare le chiavi nel lockbox",
     },
     "Bardonecchia": {
-        "en": "leave the keys on the table",
-        "it": "lasciare le chiavi sul tavolo",
+        "en": "leave the key inside the lockbox",
+        "it": "lasciare la chiave nel lockbox",
     },
     "Giacinto Collegno": {
         "en": "leave the keys on the table",
@@ -443,12 +541,23 @@ def cmd_checkin(name: str, property_name: str, code: str = None, lang: str = "en
     # Get property-specific or default template
     tpl = checkin_templates.get(prop, checkin_templates.get("_default"))
 
+    # Select correct check-in video based on language
+    if lang == "it" and prop_config.get("checkin_video_it"):
+        checkin_video = prop_config["checkin_video_it"]
+    else:
+        checkin_video = prop_config.get("checkin_video", "[VIDEO_LINK]")
+
+    # Get recommendations link (prefer restaurants variant for check-in)
+    rec_link = prop_config.get("recommendations_link_restaurants",
+                               prop_config.get("recommendations_link", ""))
+
     # Build format kwargs
     fmt = {
         "name": name,
-        "code": code or "[CODE]",
-        "checkin_video": prop_config.get("checkin_video", "[VIDEO_LINK]"),
+        "code": code or prop_config.get("nuki_keypad_code", "[CODE]"),
+        "checkin_video": checkin_video,
         "lockbox_code": prop_config.get("lockbox_code", "[LOCKBOX_CODE]"),
+        "recommendations_link": rec_link,
     }
 
     msg = tpl["template"].format(**fmt)
@@ -464,8 +573,10 @@ def cmd_during_stay(name: str, lang: str = "en"):
 
 def cmd_checkout(name: str, property_name: str, lang: str = "en"):
     prop = _resolve_property(property_name)
-    templates = TEMPLATES["checkout"].get(lang, TEMPLATES["checkout"]["en"])
-    tpl = templates[0]  # standard
+    checkout_templates = TEMPLATES["checkout"].get(lang, TEMPLATES["checkout"]["en"])
+
+    # Get property-specific or default template
+    tpl = checkout_templates.get(prop, checkout_templates.get("_default"))
 
     key_info = KEY_RETURN.get(prop, KEY_RETURN["Milano"])
     if lang == "it":
