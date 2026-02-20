@@ -4,8 +4,9 @@ M4 Mac Mini Price Tracker — Willhaben.at & Kleinanzeigen.de
 
 Usage:
   python3 mac_mini_tracker.py            → check both sites, show new + cheapest
-  python3 mac_mini_tracker.py --reset    → clear the seen-listings database
   python3 mac_mini_tracker.py --all      → show ALL current listings (not just new)
+  python3 mac_mini_tracker.py --history  → price history and trends from DB
+  python3 mac_mini_tracker.py --reset    → clear the seen-listings database
 """
 
 import sys
@@ -537,10 +538,79 @@ def _print_listing(idx: int, lst: dict):
 
 # -- Entry Point --------------------------------------------------------------
 
+def show_history():
+    """Show price history and trends from the database."""
+    if not DB_PATH.exists():
+        print("No database yet. Run the tracker first.")
+        return
+
+    db = sqlite3.connect(str(DB_PATH))
+    total = db.execute("SELECT COUNT(*) FROM listings").fetchone()[0]
+    if total == 0:
+        print("No listings in database.")
+        db.close()
+        return
+
+    print(f"\n{'=' * 60}")
+    print(f"  📈 Mac Mini M4 — Price History")
+    print(f"{'=' * 60}")
+
+    # Overall stats
+    priced = db.execute(
+        "SELECT COUNT(*), MIN(price_cents), MAX(price_cents), AVG(price_cents) "
+        "FROM listings WHERE price_cents > 0"
+    ).fetchone()
+    if priced[0] > 0:
+        print(f"\n  Total listings tracked: {total} ({priced[0]} with prices)")
+        print(f"  Price range: €{priced[1]/100:,.0f} — €{priced[2]/100:,.0f}")
+        print(f"  Average: €{priced[3]/100:,.0f}")
+
+    # By site
+    print(f"\n  ── By Site ──")
+    for site in ["willhaben", "kleinanzeigen"]:
+        row = db.execute(
+            "SELECT COUNT(*), MIN(price_cents), AVG(price_cents) "
+            "FROM listings WHERE site=? AND price_cents > 0", (site,)
+        ).fetchone()
+        if row[0] > 0:
+            tag = "Willhaben (AT)" if site == "willhaben" else "Kleinanzeigen (DE)"
+            print(f"    {tag}: {row[0]} listings · cheapest €{row[1]/100:,.0f} · avg €{row[2]/100:,.0f}")
+
+    # Top 5 cheapest ever
+    cheapest = db.execute(
+        "SELECT title, price_cents, site, url, first_seen FROM listings "
+        "WHERE price_cents > 0 ORDER BY price_cents LIMIT 5"
+    ).fetchall()
+    if cheapest:
+        print(f"\n  ── Top 5 Cheapest Ever ──")
+        for i, (title, price, site, url, seen) in enumerate(cheapest, 1):
+            tag = "WH" if site == "willhaben" else "KA"
+            print(f"    {i}. €{price/100:,.0f} [{tag}] {title[:50]}")
+            print(f"       Seen: {seen[:10]}  {url}")
+
+    # Recent additions (last 7 days)
+    recent = db.execute(
+        "SELECT title, price_cents, site, first_seen FROM listings "
+        "WHERE first_seen > date('now', '-7 days') AND price_cents > 0 "
+        "ORDER BY first_seen DESC LIMIT 10"
+    ).fetchall()
+    if recent:
+        print(f"\n  ── Added Last 7 Days ──")
+        for title, price, site, seen in recent:
+            tag = "WH" if site == "willhaben" else "KA"
+            print(f"    €{price/100:,.0f} [{tag}] {title[:50]} ({seen[:10]})")
+
+    print()
+    db.close()
+
+
 def main():
     args = sys.argv[1:]
     if "--reset" in args:
         _reset_db()
+        return
+    if "--history" in args:
+        show_history()
         return
     if "--help" in args or "-h" in args:
         print(__doc__)

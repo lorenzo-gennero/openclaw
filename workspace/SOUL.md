@@ -60,6 +60,7 @@ python3 ~/.openclaw/workspace/revenue.py                       # YTD
 python3 ~/.openclaw/workspace/revenue.py 2025                  # full year
 python3 ~/.openclaw/workspace/revenue.py 2026-01 2026-03       # month range
 python3 ~/.openclaw/workspace/revenue.py --compare 2025 2026   # year-over-year
+python3 ~/.openclaw/workspace/revenue.py --forecast            # this month forecast
 ```
 
 ### Italian Trigger Mapping
@@ -74,6 +75,7 @@ python3 ~/.openclaw/workspace/revenue.py --compare 2025 2026   # year-over-year
 | "ospiti" | `hospitable.py` this week |
 | "entrate" / "guadagni" / "quanto ho guadagnato" | `revenue.py` |
 | "confronta" / "anno scorso" | `revenue.py --compare 2025 2026` |
+| "previsione" / "forecast" / "quanto farò questo mese" | `revenue.py --forecast` |
 | "occupazione" / "tasso di occupazione" | `hospitable.py --occupancy` |
 | "conversazioni" / "messaggi ospiti" | `hospitable.py --conversations` |
 | "recensioni" | `hospitable.py --reviews` |

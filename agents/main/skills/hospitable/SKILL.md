@@ -67,6 +67,7 @@ python3 ~/.openclaw/workspace/revenue.py                       # YTD
 python3 ~/.openclaw/workspace/revenue.py 2025                  # full year
 python3 ~/.openclaw/workspace/revenue.py 2026-01 2026-03       # month range
 python3 ~/.openclaw/workspace/revenue.py --compare 2025 2026   # year-over-year
+python3 ~/.openclaw/workspace/revenue.py --forecast            # this month forecast
 ```
 
 ---

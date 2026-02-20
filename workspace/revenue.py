@@ -10,6 +10,7 @@ Usage:
   python3 revenue.py --compare 2025 2026   → year-over-year comparison
   python3 revenue.py --monthly [year]      → month-by-month breakdown
   python3 revenue.py --best                → best performing months/properties
+  python3 revenue.py --forecast            → this month's forecast (confirmed + gaps)
 
   Add --property <name> to filter to one property.
   Aliases: milano, bardo, drovetti, giacinto
@@ -373,6 +374,92 @@ def print_best(props: dict = None):
     print()
 
 
+def print_forecast(props: dict = None):
+    """Forecast revenue for the rest of the current month using confirmed bookings + gap pricing."""
+    if props is None:
+        props = PROPERTIES
+    today = date.today()
+    year, mon = today.year, today.month
+    days_in = monthrange(year, mon)[1]
+    month_start = f"{year}-{mon:02d}-01"
+    month_end = f"{year}-{mon:02d}-{days_in:02d}"
+
+    print(f"\n{'=' * 60}")
+    print(f"  🔮 REVENUE FORECAST — {month_abbr[mon]} {year}")
+    print(f"{'=' * 60}")
+
+    # 1. Actual revenue so far this month
+    actual = generate_report(month_start, today.isoformat(), props)
+    actual_total = sum(r.get("total", 0) for r in actual.values()) / 100
+    actual_nights = sum(r.get("nights", 0) for r in actual.values())
+
+    print(f"\n  ── Confirmed Revenue (to {today.isoformat()}) ──")
+    for pname in sorted(actual.keys()):
+        r = actual[pname]
+        print(f"    {pname}: €{r['total'] / 100:,.0f} ({r['nights']}n)")
+    print(f"    {'─' * 40}")
+    print(f"    Subtotal: €{actual_total:,.0f} ({actual_nights} nights)")
+
+    # 2. Future bookings this month
+    from datetime import timedelta
+    tomorrow = today + timedelta(days=1)
+    future = generate_report(tomorrow.isoformat(), month_end, props)
+    future_total = sum(r.get("total", 0) for r in future.values()) / 100
+    future_nights = sum(r.get("nights", 0) for r in future.values())
+
+    print(f"\n  ── Upcoming Bookings ({tomorrow.isoformat()} → {month_end}) ──")
+    for pname in sorted(future.keys()):
+        r = future[pname]
+        print(f"    {pname}: €{r['total'] / 100:,.0f} ({r['nights']}n)")
+    if not future:
+        print(f"    No upcoming bookings this month")
+    print(f"    {'─' * 40}")
+    print(f"    Subtotal: €{future_total:,.0f} ({future_nights} nights)")
+
+    # 3. Gap revenue potential (using calendar pricing)
+    sys.path.insert(0, str(Path.home() / ".openclaw/workspace"))
+    gap_potential = 0
+    gap_nights = 0
+    try:
+        import hospitable
+        remaining_start = tomorrow.isoformat()
+        print(f"\n  ── Unbooked Gap Potential ({remaining_start} → {month_end}) ──")
+        for pid, pname in props.items():
+            cal_days = hospitable.get_calendar(pid, remaining_start, month_end)
+            avail = [d for d in cal_days if d.get("status", {}).get("available", False)]
+            if avail:
+                potential = sum(d.get("price", {}).get("amount", 0) for d in avail) / 100
+                gap_potential += potential
+                gap_nights += len(avail)
+                print(f"    {pname}: {len(avail)} open night(s) · €{potential:,.0f} if booked")
+            else:
+                print(f"    {pname}: fully booked")
+            time.sleep(0.2)
+        print(f"    {'─' * 40}")
+        print(f"    Gap potential: €{gap_potential:,.0f} ({gap_nights} nights)")
+    except ImportError:
+        print(f"\n  (Could not import hospitable module for gap analysis)")
+
+    # 4. Summary
+    confirmed = actual_total + future_total
+    best_case = confirmed + gap_potential
+    days_elapsed = today.day
+    days_remaining = days_in - days_elapsed
+
+    print(f"\n  {'=' * 50}")
+    print(f"  FORECAST SUMMARY — {month_abbr[mon]} {year}")
+    print(f"  {'─' * 50}")
+    print(f"  Confirmed revenue:       €{confirmed:>8,.0f}")
+    print(f"  Best case (fill gaps):   €{best_case:>8,.0f}")
+    print(f"  Days elapsed / remaining: {days_elapsed} / {days_remaining}")
+    print(f"  Booked nights (total):   {actual_nights + future_nights}")
+    print(f"  Open nights remaining:   {gap_nights}")
+    if actual_nights + future_nights > 0:
+        avg_rate = confirmed / (actual_nights + future_nights)
+        print(f"  Avg confirmed rate:      €{avg_rate:,.0f}/night")
+    print(f"  {'=' * 50}\n")
+
+
 def _parse_global_args(args: list) -> tuple:
     """Extract --property flag from args."""
     prop_filter = None
@@ -431,6 +518,10 @@ def main():
 
     if args and args[0] == "--best":
         print_best(props)
+        return
+
+    if args and args[0] == "--forecast":
+        print_forecast(props)
         return
 
     if args and args[0] in ("--help", "-h"):
