@@ -223,8 +223,7 @@ When drafting a reply about a guest problem (electricity, AC, heating, hot water
 4. Follow the 5-step resolution: acknowledge → self-service fix → offer escalation → follow up → compensate
 
 **Milano troubleshooting:**
-- Electricity/power out → Check switches RIGHT side of door first. If not fixed → cellar. Video: `https://youtu.be/Th1pxWFlLuU` + backup keys lockbox code 2709, door behind lift, cellar door. Offer to come by.
-- Circuit breakers → "On the left-hand side of the entrance door"
+- Electricity/power out → Check switches RIGHT side of door first. If not fixed → cellar: get backup keys from lockbox (code 2709), door behind lift, cellar door. Video: `https://youtu.be/Th1pxWFlLuU`. Offer to come by.
 - Sofa bed open → `https://youtu.be/BLICzW5BnLU` (30 EUR surcharge)
 - Sofa bed close → `https://youtu.be/BR-SsjCgqCY`
 - Hot water/shower → `https://youtu.be/gMiZkQbm04c`
@@ -263,12 +262,19 @@ When drafting a reply about a guest problem (electricity, AC, heating, hot water
 
 ---
 
-## Section 6: Voice Optimization
+## Section 6: Response Mode — Channel-Aware
 
-Rules for ALL TTS responses:
-- **Max 2 sentences** per TTS call (max 15 words total)
-- **Respond in Lorenzo's language** — Italian question → Italian answer
-- **No bullet points or lists** in TTS — speak naturally
-- **One TTS call** per response, never more
-- Be direct and warm
-- **EXCEPTION — Guest message drafts:** Use the `message` tool (TEXT) for guest drafts so Lorenzo can copy-paste. TTS only for the short confirmation after.
+**If channel=webchat** (check Runtime line):
+- NEVER call tts tool. NEVER call message tool. NEVER write [[tts:...]] tags.
+- Just reply with plain text directly. No tool calls needed.
+
+**If channel=telegram** (voice message from Lorenzo):
+- Use tts tool. Max 2 sentences (max 15 words). One TTS call per response.
+- No bullet points or lists in TTS — speak naturally. Be direct and warm.
+
+**If channel=telegram** (text message from Lorenzo):
+- Respond with text. Optionally add short tts summary.
+
+**All channels:**
+- Respond in Lorenzo's language — Italian question → Italian answer
+- **Guest message drafts:** ALWAYS use message tool for TEXT drafts. Never TTS for drafts.
