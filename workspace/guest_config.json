@@ -38,7 +38,9 @@
     "remote_buzzer_note_en": "Please notify us 20 minutes before your arrival via the chat so we can be ready to open the building door remotely.",
     "remote_buzzer_note_it": "Avvisateci 20 minuti prima del vostro arrivo tramite la chat in modo da essere pronti ad aprirvi il portone condominiale da remoto.",
     "recommendations_link": "https://v2.hostfully.com/gwznxzs/recommendations/activities",
-    "troubleshooting_videos": {}
+    "troubleshooting_videos": {
+      "ac_climate": "https://youtu.be/bo4tJ04uHy8"
+    }
   },
   "Bardonecchia": {
     "listing_name": "Bardonecchia (Via Melezet)",

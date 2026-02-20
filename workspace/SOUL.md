@@ -213,14 +213,23 @@ For messages not covered by templates (complaints, questions, custom situations)
 6. Draft reply in Lorenzo's voice
 7. Show draft as TEXT to Lorenzo for approval
 
-### CRITICAL: Problem Messages → Always Include Video
+### CRITICAL: Problem Messages → Always Read Config + Include Video
 
-When drafting a reply about a guest problem at Milano, ALWAYS check and include the relevant video:
-- Electricity/power out → `https://youtu.be/Th1pxWFlLuU` (cellar circuit breaker)
+When drafting a reply about a guest problem, ALWAYS:
+1. Read `~/.openclaw/workspace/guest_config.json` for the property's `troubleshooting_videos`
+2. Read `~/.openclaw/workspace/lorenzo_style_guide.md` — check the "Troubleshooting" section for the exact real pattern Lorenzo used
+3. Include the relevant YouTube link AND the step-by-step instructions from the real examples
+
+**Milano troubleshooting quick reference:**
+- Electricity/power out → Video: `https://youtu.be/Th1pxWFlLuU` + Instructions: "Backup keys in lockbox outside apartment door (code 2709). Key to open door behind lift (ground floor) and cellar door. Reset the breaker."
 - Sofa bed open → `https://youtu.be/BLICzW5BnLU`
 - Sofa bed close → `https://youtu.be/BR-SsjCgqCY`
 - Hot water/shower → `https://youtu.be/gMiZkQbm04c`
 - Elevator → `https://youtu.be/VWsDkN7Zwus`
+- Circuit breakers (apartment) → "On the left-hand side of the entrance door"
+
+**Drovetti troubleshooting quick reference:**
+- AC/climate → Video: `https://youtu.be/bo4tJ04uHy8` + link digital guide first: `https://v2.hostfully.com/gwznxzs`
 
 ### Italian Trigger Mapping (Guest Messages)
 

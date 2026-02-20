@@ -60,19 +60,23 @@ For messages that don't fit a template (complaints, questions, custom situations
 5. **Draft reply** following Lorenzo's patterns
 6. **Show draft to Lorenzo** for approval
 
-### CRITICAL: Always Check Config for Problem-Related Messages
+### CRITICAL: Always Check Config + Style Guide for Problem-Related Messages
 
-When Lorenzo says something like "electricity problem", "sofa bed", "hot water", "elevator" — you MUST:
-1. Read `guest_config.json`
-2. Find the matching video in `troubleshooting_videos` for that property
-3. Include the YouTube link in the draft
+When Lorenzo says something like "electricity problem", "sofa bed", "hot water", "elevator", "AC" — you MUST:
+1. Read `guest_config.json` — find the matching video in `troubleshooting_videos`
+2. Read `lorenzo_style_guide.md` — find the "Troubleshooting" section for the REAL pattern Lorenzo used in past conversations
+3. Include the YouTube link AND the step-by-step instructions in the draft
 
-**Milano troubleshooting videos (quick reference):**
+**Milano troubleshooting (quick reference):**
+- Electricity/power out: Video `https://youtu.be/Th1pxWFlLuU` + "Backup keys in lockbox outside apartment door, on the right (code 2709). Key to open door behind lift (ground floor) and cellar door."
+- Circuit breakers (apartment-level): "On the left-hand side of the entrance door"
 - Sofa bed open: `https://youtu.be/BLICzW5BnLU`
 - Sofa bed close: `https://youtu.be/BR-SsjCgqCY`
 - Hot water/shower: `https://youtu.be/gMiZkQbm04c`
-- Electricity/breaker: `https://youtu.be/Th1pxWFlLuU`
 - Elevator: `https://youtu.be/VWsDkN7Zwus`
+
+**Drovetti troubleshooting (quick reference):**
+- AC/climate: Link digital guide first `https://v2.hostfully.com/gwznxzs` then video `https://youtu.be/bo4tJ04uHy8`
 
 ---
 
