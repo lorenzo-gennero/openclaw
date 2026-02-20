@@ -131,6 +131,9 @@ python3 ~/.openclaw/workspace/nuki.py --cleanup
 # Cross-ref Hospitable guests with codes
 python3 ~/.openclaw/workspace/nuki.py --guest-codes
 
+# Auto-create codes for all upcoming Milano guests missing one
+python3 ~/.openclaw/workspace/nuki.py --auto-codes
+
 # Token check
 python3 ~/.openclaw/workspace/nuki.py --token-check
 ```
@@ -145,6 +148,7 @@ python3 ~/.openclaw/workspace/nuki.py --token-check
 | "codici" / "codice ospite" | `nuki.py --codes` |
 | "log serratura" / "chi è entrato" | `nuki.py --logs` |
 | "crea codice" / "codice per [nome]" | `nuki.py --create-code` |
+| "crea tutti i codici" / "codici automatici" | `nuki.py --auto-codes` |
 | "batteria serratura" | `nuki.py --status` |
 
 ---

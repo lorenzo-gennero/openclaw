@@ -13,6 +13,7 @@ Usage:
   python3 nuki.py --delete-code <auth_id>                  → delete a code
   python3 nuki.py --cleanup                                → remove expired codes
   python3 nuki.py --guest-codes                            → cross-ref with Hospitable
+  python3 nuki.py --auto-codes                             → auto-create codes for upcoming guests
   python3 nuki.py --token-check                            → token health
 """
 
@@ -618,6 +619,100 @@ def show_guest_codes():
             print(f"       python3 nuki.py --create-code \"{g['name']}\" {code} {arrival}T15:00 {departure}T11:00")
         print()
 
+def auto_create_codes():
+    """Auto-create Nuki codes for all upcoming Milano guests missing one."""
+    print("\n\U0001f510  Auto-Create Codes — Milano Guests\n")
+
+    sys.path.insert(0, str(Path.home() / ".openclaw/workspace"))
+    try:
+        import hospitable
+    except ImportError:
+        print("  \u274c Cannot import hospitable module.\n")
+        return
+
+    today = date.today()
+    end_str = (today + timedelta(days=14)).isoformat()
+    wide_start = (today - timedelta(days=7)).isoformat()
+    milano_id = "cd4bf5fb-16ef-49c8-b3db-93437e5f009f"
+    milano_props = {milano_id: "Milano"}
+
+    try:
+        reservations = hospitable.get_reservations(wide_start, end_str, includes=["guest"], props=milano_props)
+    except Exception as e:
+        print(f"  \u274c Error fetching reservations: {e}\n")
+        return
+
+    if not reservations:
+        print("  No upcoming Milano reservations.\n")
+        return
+
+    # Get active codes
+    locks = get_smartlocks()
+    active_code_names = set()
+    for lk in locks:
+        lock_id = str(lk["smartlockId"])
+        try:
+            auths = get_auth_list(lock_id)
+            for auth in auths:
+                if auth.get("type") == 13 and auth.get("enabled"):
+                    active_code_names.add(auth.get("name", "").lower().strip())
+        except Exception:
+            continue
+
+    # Find guests without codes
+    start_str = today.isoformat()
+    missing = []
+    for r in reservations:
+        arrival = (r.get("arrival_date", "") or "")[:10]
+        departure = (r.get("departure_date", "") or "")[:10]
+        if departure <= start_str:
+            continue
+        guest = r.get("guest") or {}
+        guest_name = f"{guest.get('first_name', '')} {guest.get('last_name', '')}".strip() or "Unknown"
+        name_lower = guest_name.lower()
+        parts = name_lower.split()
+        has_code = any(
+            name_lower in cn or cn in name_lower or
+            any(len(p) > 2 and (p in cn or cn.startswith(p)) for p in parts)
+            for cn in active_code_names
+        )
+        if not has_code:
+            missing.append({"name": guest_name, "arrival": arrival, "departure": departure})
+
+    if not missing:
+        print("  \u2705 All upcoming Milano guests already have codes!\n")
+        return
+
+    print(f"  Creating codes for {len(missing)} guest(s)...\n")
+    created = 0
+    for g in missing:
+        code = generate_code()
+        from_dt = f"{g['arrival']}T15:00"
+        until_dt = f"{g['departure']}T11:00"
+        lock_id = str(locks[0]["smartlockId"])
+        lock_name = get_lock_name(locks[0])
+
+        payload = {
+            "name": g["name"],
+            "type": 13,
+            "code": int(code),
+            "allowedFromDate": from_dt,
+            "allowedUntilDate": until_dt,
+            "allowedWeekDays": 127,
+            "enabled": True,
+        }
+
+        print(f"  \U0001f510 {g['name']}  code={_mask_code(code)}  {from_dt} → {until_dt}")
+        try:
+            _api_put(f"smartlock/{lock_id}/auth", payload)
+            print(f"    \u2705 Created!")
+            created += 1
+            time.sleep(0.5)  # rate limit courtesy
+        except Exception as e:
+            print(f"    \u274c Failed: {e}")
+
+    print(f"\n  Done: {created}/{len(missing)} codes created.\n")
+
 def show_token_check():
     """Validate token with GET /smartlock, check token file age."""
     print("\n\U0001f511  Nuki Token Health Check\n")
@@ -681,6 +776,8 @@ def main():
         cleanup_codes()
     elif args[0] == "--guest-codes":
         show_guest_codes()
+    elif args[0] == "--auto-codes":
+        auto_create_codes()
     elif args[0] == "--token-check":
         show_token_check()
     elif args[0] in ("--help", "-h"):
