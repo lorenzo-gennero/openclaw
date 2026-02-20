@@ -41,7 +41,10 @@ python3 ~/.openclaw/workspace/hospitable.py --conversations
 python3 ~/.openclaw/workspace/hospitable.py --token-check
 
 # Reviews
-python3 ~/.openclaw/workspace/hospitable.py --reviews
+python3 ~/.openclaw/workspace/hospitable.py --reviews                         # recent
+python3 ~/.openclaw/workspace/hospitable.py --reviews --pending               # needs response
+python3 ~/.openclaw/workspace/hospitable.py --reviews --low                   # ★1-3 stars
+python3 ~/.openclaw/workspace/hospitable.py --reviews --stats                 # category breakdown
 
 # Calendar: visual availability + pricing per property
 python3 ~/.openclaw/workspace/hospitable.py --calendar              # current month

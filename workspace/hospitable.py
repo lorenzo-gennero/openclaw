@@ -10,7 +10,10 @@ Usage:
   python3 hospitable.py --occupancy [start end]→ occupancy stats (default YTD)
   python3 hospitable.py --conversations        → recent guest conversations
   python3 hospitable.py --token-check          → validate API token health
-  python3 hospitable.py --reviews              → property reviews
+  python3 hospitable.py --reviews              → recent reviews (last page)
+  python3 hospitable.py --reviews --pending   → reviews needing response
+  python3 hospitable.py --reviews --low       → low-rated reviews (★1-3)
+  python3 hospitable.py --reviews --stats     → detailed rating breakdown
   python3 hospitable.py --dashboard             → daily ops overview (all-in-one)
   python3 hospitable.py --calendar [YYYY-MM]   → visual calendar with pricing
   python3 hospitable.py --guest <name>         → search guest by name
@@ -227,16 +230,28 @@ def send_guest_message(conversation_id: str, text: str) -> bool:
         print(f"  Error sending message: {e}")
         return False
 
-def get_reviews() -> dict:
-    """Fetch reviews for all properties."""
+def get_reviews(prop_filter: str = None, pages: int = 1) -> dict:
+    """Fetch reviews for properties. pages=0 fetches all pages."""
+    props = _filter_properties(prop_filter) if prop_filter else PROPERTIES
     results = {}
-    for prop_id, name in PROPERTIES.items():
+    for prop_id, name in props.items():
         try:
-            data = _api_get(f"properties/{prop_id}/reviews")
-            items = data.get("data", []) if isinstance(data, dict) else []
-            results[name] = items
+            all_items = []
+            page = 1
+            while True:
+                data = _api_get(f"properties/{prop_id}/reviews", [("page", str(page))])
+                items = data.get("data", []) if isinstance(data, dict) else []
+                all_items.extend(items)
+                meta = data.get("meta", {})
+                if pages > 0 and page >= pages:
+                    break
+                if page >= meta.get("last_page", 1):
+                    break
+                page += 1
+                time.sleep(0.2)
+            results[name] = {"items": all_items, "total": meta.get("total", len(all_items))}
         except Exception:
-            results[name] = []
+            results[name] = {"items": [], "total": 0}
     return results
 
 # ── Formatting helpers ────────────────────────────────────────────────────────
@@ -316,21 +331,114 @@ def show_range(start: str, end: str):
         print()
     print(f"  Total: {len(reservations)} reservation(s)\n")
 
-def show_reviews():
-    print("\n⭐  Property Reviews\n")
-    reviews = get_reviews()
-    for prop, items in reviews.items():
-        avg = sum(r.get("public", {}).get("rating", 0) for r in items) / len(items) if items else 0
-        print(f"  🏡 {prop} — {len(items)} review(s)  avg ★{avg:.1f}")
-        for rv in items[:5]:
+def show_reviews(mode: str = "recent", prop_filter: str = None):
+    """Show reviews. mode: recent (default), pending (needs response), low (1-3 stars), stats."""
+    pages = 1 if mode == "recent" else 0  # fetch all for filtering modes
+
+    if mode == "stats":
+        print("\n⭐  Review Statistics (fetching all reviews...)\n")
+        pages = 0
+    elif mode == "pending":
+        print("\n⚠️  Reviews Needing Response\n")
+    elif mode == "low":
+        print("\n📉  Low-Rated Reviews (★1-3)\n")
+    else:
+        print("\n⭐  Recent Reviews\n")
+
+    reviews = get_reviews(prop_filter=prop_filter, pages=pages)
+    grand_total = 0
+    grand_pending = 0
+
+    for prop, data in reviews.items():
+        items = data["items"]
+        total = data["total"]
+        grand_total += total
+
+        if not items:
+            print(f"  🏡 {prop} — no reviews\n")
+            continue
+
+        # Calculate stats from fetched items
+        ratings = [r.get("public", {}).get("rating", 0) for r in items if r.get("public", {}).get("rating")]
+        avg = sum(ratings) / len(ratings) if ratings else 0
+        pending = [r for r in items if r.get("can_respond") and not r.get("responded_at")]
+        low = [r for r in items if (r.get("public", {}).get("rating") or 5) <= 3]
+        grand_pending += len(pending)
+
+        # Filter based on mode
+        if mode == "pending":
+            display = pending
+        elif mode == "low":
+            display = low
+        elif mode == "stats":
+            display = []  # stats mode shows summary only
+        else:
+            display = items[:5]
+
+        # Header
+        pending_tag = f"  ⚠️ {len(pending)} need response" if pending else ""
+        low_tag = f"  📉 {len(low)} low-rated" if low else ""
+        print(f"  🏡 {prop} — {total} total · avg ★{avg:.1f}{pending_tag}{low_tag}")
+
+        if mode == "stats" and items:
+            # Detailed category breakdown
+            cat_totals = {}
+            cat_counts = {}
+            for rv in items:
+                for dr in (rv.get("private", {}) or {}).get("detailed_ratings", []):
+                    cat = dr.get("type", "")
+                    r = dr.get("rating", 0)
+                    if r > 0 and cat:
+                        cat_totals[cat] = cat_totals.get(cat, 0) + r
+                        cat_counts[cat] = cat_counts.get(cat, 0) + 1
+            if cat_totals:
+                print(f"    Category breakdown (from {len(items)} reviews):")
+                for cat in ["cleanliness", "communication", "checkin", "accuracy", "location", "value"]:
+                    if cat in cat_totals:
+                        cat_avg = cat_totals[cat] / cat_counts[cat]
+                        bar = "★" * round(cat_avg) + "☆" * (5 - round(cat_avg))
+                        print(f"      {cat:<15} {bar} {cat_avg:.1f}")
+
+        if mode == "pending" and not pending:
+            print(f"    ✅ All responded!\n")
+            continue
+        elif mode == "low" and not low:
+            print(f"    ✅ No low ratings!\n")
+            continue
+
+        for rv in display:
             pub = rv.get("public", {})
             rating = pub.get("rating", "?")
-            comment = (pub.get("review") or "")[:120]
+            comment = (pub.get("review") or "—")[:200]
             date_str = rv.get("reviewed_at", "")[:10]
+            responded = rv.get("responded_at")
             can_respond = rv.get("can_respond", False)
-            respond_tag = " [⚠️ needs response]" if can_respond and not rv.get("responded_at") else ""
-            print(f"    ★{rating} ({date_str}){respond_tag}: {comment}")
+
+            stars = "★" * int(rating) + "☆" * (5 - int(rating)) if isinstance(rating, int) else f"★{rating}"
+            tag = ""
+            if can_respond and not responded:
+                tag = " ⚠️ NEEDS RESPONSE"
+            elif responded:
+                tag = " ✅"
+
+            print(f"    {stars} ({date_str}){tag}")
+            if comment and comment != "—":
+                print(f"      \"{comment}\"")
+
+            # Show existing response if any
+            response = pub.get("response")
+            if response and mode == "pending":
+                print(f"      → Response: \"{response[:100]}\"")
         print()
+
+    # Summary
+    if mode == "pending":
+        print(f"  {'─' * 50}")
+        print(f"  Total needing response: {grand_pending}")
+    elif mode == "stats":
+        print(f"  {'─' * 50}")
+        print(f"  Total reviews across all properties: {grand_total}")
+    print()
 
 def show_upcoming(days: int = 7):
     """Show check-ins, check-outs, and currently staying guests for the next N days."""
@@ -910,7 +1018,10 @@ def main():
     elif args[0] in ("--menu", "-m"):
         interactive_menu()
     elif args[0] in ("--reviews", "-r"):
-        show_reviews()
+        mode = "recent"
+        if len(args) > 1 and args[1] in ("--pending", "--low", "--stats"):
+            mode = args[1].lstrip("-")
+        show_reviews(mode=mode, prop_filter=prop_filter)
     elif args[0] == "--dashboard":
         show_dashboard()
     elif args[0] == "--calendar":

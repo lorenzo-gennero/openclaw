@@ -34,7 +34,10 @@ python3 ~/.openclaw/workspace/hospitable.py --conversations
 python3 ~/.openclaw/workspace/hospitable.py --token-check
 
 # Reviews
-python3 ~/.openclaw/workspace/hospitable.py --reviews
+python3 ~/.openclaw/workspace/hospitable.py --reviews                         # recent
+python3 ~/.openclaw/workspace/hospitable.py --reviews --pending               # needs response
+python3 ~/.openclaw/workspace/hospitable.py --reviews --low                   # ★1-3 stars
+python3 ~/.openclaw/workspace/hospitable.py --reviews --stats                 # category breakdown
 
 # Calendar — visual availability + pricing per property
 python3 ~/.openclaw/workspace/hospitable.py --calendar              # current month
@@ -74,6 +77,9 @@ python3 ~/.openclaw/workspace/revenue.py --compare 2025 2026   # year-over-year
 | "occupazione" / "tasso di occupazione" | `hospitable.py --occupancy` |
 | "conversazioni" / "messaggi ospiti" | `hospitable.py --conversations` |
 | "recensioni" | `hospitable.py --reviews` |
+| "recensioni da rispondere" / "recensioni senza risposta" | `hospitable.py --reviews --pending` |
+| "recensioni negative" / "recensioni basse" | `hospitable.py --reviews --low` |
+| "statistiche recensioni" | `hospitable.py --reviews --stats` |
 | "calendario" / "disponibilità" / "mese" | `hospitable.py --calendar` |
 | "cerca ospite" / "trova ospite" / "guest [nome]" | `hospitable.py --guest <nome>` |
 | "buchi" / "notti libere" / "notti vuote" | `hospitable.py --gaps` |

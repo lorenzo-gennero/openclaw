@@ -43,9 +43,13 @@ PROPERTY_ALIASES = {
 # ── Config Loader ────────────────────────────────────────────────────────────
 
 def _load_config() -> dict:
-    if CONFIG_PATH.exists():
+    if not CONFIG_PATH.exists():
+        return {}
+    try:
         return json.loads(CONFIG_PATH.read_text())
-    return {}
+    except json.JSONDecodeError as e:
+        print(f"  Warning: invalid JSON in {CONFIG_PATH}: {e}")
+        return {}
 
 def _resolve_property(name: str) -> str:
     """Resolve property alias to canonical name."""
@@ -523,8 +527,8 @@ def cmd_welcome(name: str, property_name: str, lang: str = "en"):
 
     # Use recommendations variant if property has a link
     rec_link = prop_config.get("recommendations_link")
-    if rec_link and lang == "en":
-        tpl = next((t for t in templates if t["name"] == "with_recommendations"), templates[0])
+    if rec_link:
+        tpl = next((t for t in templates if "recommendations" in t.get("name", "")), templates[0])
         msg = tpl["template"].format(name=name, recommendations_link=rec_link)
     else:
         tpl = templates[0]  # standard
@@ -583,7 +587,7 @@ def cmd_checkout(name: str, property_name: str, lang: str = "en"):
         key_instruction = key_info.get("it", key_info["en"])
         msg = tpl["template"].format(name=name, key_return_instruction_it=key_instruction)
     else:
-        key_instruction = key_info.get("en", key_info["en"])
+        key_instruction = key_info.get("en", "leave the keys on the table")
         msg = tpl["template"].format(name=name, key_return_instruction=key_instruction)
 
     _print_draft(msg, "checkout", prop, lang)
