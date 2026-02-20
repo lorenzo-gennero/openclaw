@@ -20,8 +20,10 @@ import sys
 import json
 import random
 import subprocess
+import time
 import urllib.request
 import urllib.parse
+import urllib.error
 from datetime import datetime, date, timezone
 from pathlib import Path
 
@@ -47,35 +49,83 @@ def _headers() -> dict:
         "Content-Type": "application/json",
     }
 
-def _api_get(path: str, params: dict = None) -> any:
+def _api_get(path: str, params: dict = None, retries: int = 3) -> any:
     url = f"{BASE_URL}/{path}"
     if params:
         url += f"?{urllib.parse.urlencode(params)}"
     req = urllib.request.Request(url, headers=_headers())
-    with urllib.request.urlopen(req, timeout=15) as resp:
-        return json.loads(resp.read().decode())
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                return json.loads(resp.read().decode())
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < retries - 1:
+                time.sleep(2 * (attempt + 1))
+            else:
+                raise
+        except Exception:
+            if attempt < retries - 1:
+                time.sleep(2 * (attempt + 1))
+            else:
+                raise
 
-def _api_post(path: str, body: dict = None) -> any:
+def _api_post(path: str, body: dict = None, retries: int = 3) -> any:
     url = f"{BASE_URL}/{path}"
     data = json.dumps(body).encode() if body else b""
     req = urllib.request.Request(url, data=data, headers=_headers(), method="POST")
-    with urllib.request.urlopen(req, timeout=15) as resp:
-        raw = resp.read().decode()
-        return json.loads(raw) if raw.strip() else {}
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                raw = resp.read().decode()
+                return json.loads(raw) if raw.strip() else {}
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < retries - 1:
+                time.sleep(2 * (attempt + 1))
+            else:
+                raise
+        except Exception:
+            if attempt < retries - 1:
+                time.sleep(2 * (attempt + 1))
+            else:
+                raise
 
-def _api_put(path: str, body: dict) -> any:
+def _api_put(path: str, body: dict, retries: int = 3) -> any:
     url = f"{BASE_URL}/{path}"
     data = json.dumps(body).encode()
     req = urllib.request.Request(url, data=data, headers=_headers(), method="PUT")
-    with urllib.request.urlopen(req, timeout=15) as resp:
-        raw = resp.read().decode()
-        return json.loads(raw) if raw.strip() else {}
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                raw = resp.read().decode()
+                return json.loads(raw) if raw.strip() else {}
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < retries - 1:
+                time.sleep(2 * (attempt + 1))
+            else:
+                raise
+        except Exception:
+            if attempt < retries - 1:
+                time.sleep(2 * (attempt + 1))
+            else:
+                raise
 
-def _api_delete(path: str) -> bool:
+def _api_delete(path: str, retries: int = 3) -> bool:
     url = f"{BASE_URL}/{path}"
     req = urllib.request.Request(url, headers=_headers(), method="DELETE")
-    with urllib.request.urlopen(req, timeout=15) as resp:
-        return resp.status in (200, 204)
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                return resp.status in (200, 204)
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < retries - 1:
+                time.sleep(2 * (attempt + 1))
+            else:
+                raise
+        except Exception:
+            if attempt < retries - 1:
+                time.sleep(2 * (attempt + 1))
+            else:
+                raise
 
 # ── Core ─────────────────────────────────────────────────────────────────────
 
@@ -531,7 +581,10 @@ def main():
         name = args[1] if len(args) > 1 else None
         do_lock(name)
     elif args[0] == "--logs":
-        limit = int(args[1]) if len(args) > 1 else 20
+        try:
+            limit = int(args[1]) if len(args) > 1 else 20
+        except ValueError:
+            limit = 20
         show_logs(limit)
     elif args[0] == "--codes":
         show_codes()
