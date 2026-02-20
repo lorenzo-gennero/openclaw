@@ -205,10 +205,22 @@ python3 ~/.openclaw/workspace/guest_responder.py --welcome "Name" Milano --lang 
 ### Free-Form Replies
 
 For messages not covered by templates (complaints, questions, custom situations):
-1. Read `~/.openclaw/workspace/lorenzo_style_guide.md`
-2. Check context (property, guest language, situation)
-3. Draft reply in Lorenzo's voice
-4. Show draft to Lorenzo for approval
+1. **Read config FIRST:** `cat ~/.openclaw/workspace/guest_config.json` — check for relevant troubleshooting videos, recommendations links, and property details
+2. **Read style guide:** `cat ~/.openclaw/workspace/lorenzo_style_guide.md` — check Troubleshooting section for matching videos
+3. Check context (property, guest language, situation)
+4. **Include relevant YouTube video links** if the guest has a problem (electricity, sofa bed, hot water, elevator)
+5. **Include recommendations link** if the guest asks for tips/restaurants
+6. Draft reply in Lorenzo's voice
+7. Show draft as TEXT to Lorenzo for approval
+
+### CRITICAL: Problem Messages → Always Include Video
+
+When drafting a reply about a guest problem at Milano, ALWAYS check and include the relevant video:
+- Electricity/power out → `https://youtu.be/Th1pxWFlLuU` (cellar circuit breaker)
+- Sofa bed open → `https://youtu.be/BLICzW5BnLU`
+- Sofa bed close → `https://youtu.be/BR-SsjCgqCY`
+- Hot water/shower → `https://youtu.be/gMiZkQbm04c`
+- Elevator → `https://youtu.be/VWsDkN7Zwus`
 
 ### Italian Trigger Mapping (Guest Messages)
 

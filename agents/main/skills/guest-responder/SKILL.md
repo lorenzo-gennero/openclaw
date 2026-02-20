@@ -51,12 +51,28 @@ python3 ~/.openclaw/workspace/guest_responder.py --list-templates
 
 ## Free-Form Replies (Style Guide)
 
-For messages that don't fit a template (complaints, questions, custom situations), read the style guide and draft a reply in Lorenzo's voice:
+For messages that don't fit a template (complaints, questions, custom situations):
 
-1. **Read the style guide:** `~/.openclaw/workspace/lorenzo_style_guide.md`
-2. **Check context:** property, dates, language, guest history
-3. **Draft reply** following Lorenzo's patterns
-4. **Show draft to Lorenzo** for approval
+1. **Read the config file FIRST:** `cat ~/.openclaw/workspace/guest_config.json` — check for relevant videos, links, and property details
+2. **Read the style guide:** `cat ~/.openclaw/workspace/lorenzo_style_guide.md` — check the Troubleshooting section for matching videos and the example pairs for tone
+3. **Check context:** property, dates, language, guest history
+4. **Include relevant links:** If the guest has a PROBLEM, you MUST check `troubleshooting_videos` in the config and include the matching YouTube video in your draft. If the guest asks for RECOMMENDATIONS, include the `recommendations_link`.
+5. **Draft reply** following Lorenzo's patterns
+6. **Show draft to Lorenzo** for approval
+
+### CRITICAL: Always Check Config for Problem-Related Messages
+
+When Lorenzo says something like "electricity problem", "sofa bed", "hot water", "elevator" — you MUST:
+1. Read `guest_config.json`
+2. Find the matching video in `troubleshooting_videos` for that property
+3. Include the YouTube link in the draft
+
+**Milano troubleshooting videos (quick reference):**
+- Sofa bed open: `https://youtu.be/BLICzW5BnLU`
+- Sofa bed close: `https://youtu.be/BR-SsjCgqCY`
+- Hot water/shower: `https://youtu.be/gMiZkQbm04c`
+- Electricity/breaker: `https://youtu.be/Th1pxWFlLuU`
+- Elevator: `https://youtu.be/VWsDkN7Zwus`
 
 ---
 
@@ -86,12 +102,15 @@ For messages that don't fit a template (complaints, questions, custom situations
 
 ## Workflow
 
-1. **Identify the message type** — welcome, check-in, during-stay, checkout, post-stay, form, or free-form
-2. **Detect language** — match the guest's language (Italian → Italian, English → English)
-3. **Run template** if applicable, or read style guide for free-form
-4. **Present draft** to Lorenzo
-5. **Wait for approval** — Lorenzo may edit before sending
-6. **Send via Hospitable** if Lorenzo confirms (use `hospitable.py` send function)
+1. **Read `guest_config.json`** — ALWAYS do this first to have property details, videos, and links ready
+2. **Identify the message type** — welcome, check-in, during-stay, checkout, post-stay, form, or free-form
+3. **Detect language** — match the guest's language (Italian → Italian, English → English)
+4. **Run template** if applicable, or read style guide for free-form
+5. **For problems:** check `troubleshooting_videos` and include the relevant YouTube link
+6. **For recommendations:** include the property's `recommendations_link`
+7. **Present draft as TEXT** to Lorenzo (use message tool, NOT TTS)
+8. **Wait for approval** — Lorenzo may edit before sending
+9. **Send via Hospitable** if Lorenzo confirms (use `hospitable.py` send function)
 
 ---
 
