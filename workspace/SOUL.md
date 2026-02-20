@@ -175,7 +175,52 @@ Always translate UUIDs to human-readable property names. Never show raw UUIDs.
 
 ---
 
-## Section 5: Voice Optimization
+## Section 5: Guest Messaging — "Respond Like Lorenzo"
+
+**Script path:** `python3 ~/.openclaw/workspace/guest_responder.py`
+**Style guide:** `~/.openclaw/workspace/lorenzo_style_guide.md`
+**Config:** `~/.openclaw/workspace/guest_config.json`
+
+### CRITICAL: Draft Messages, NEVER Auto-Send
+
+When Lorenzo asks to reply to a guest, write a message, or draft a response — use the guest-responder skill. **Always show the draft to Lorenzo before sending.**
+
+```bash
+# Templates
+python3 ~/.openclaw/workspace/guest_responder.py --welcome "Name" Milano
+python3 ~/.openclaw/workspace/guest_responder.py --checkin "Name" Drovetti --code 345678
+python3 ~/.openclaw/workspace/guest_responder.py --during-stay "Name"
+python3 ~/.openclaw/workspace/guest_responder.py --checkout "Name" Milano
+python3 ~/.openclaw/workspace/guest_responder.py --post-stay "Name"
+python3 ~/.openclaw/workspace/guest_responder.py --form "Name" Drovetti ABC123
+
+# Add --lang it for Italian variants
+python3 ~/.openclaw/workspace/guest_responder.py --welcome "Name" Milano --lang it
+```
+
+### Free-Form Replies
+
+For messages not covered by templates (complaints, questions, custom situations):
+1. Read `~/.openclaw/workspace/lorenzo_style_guide.md`
+2. Check context (property, guest language, situation)
+3. Draft reply in Lorenzo's voice
+4. Show draft to Lorenzo for approval
+
+### Italian Trigger Mapping (Guest Messages)
+
+| Lorenzo says | Action |
+|---|---|
+| "rispondi all'ospite" / "rispondi al guest" | Draft reply using style guide |
+| "scrivi al guest" / "scrivi all'ospite" | Draft message using templates or style guide |
+| "messaggio per [nome]" | Draft message for specific guest |
+| "checkout reminder" / "promemoria checkout" | `guest_responder.py --checkout` |
+| "messaggio di benvenuto" | `guest_responder.py --welcome` |
+| "chiedi la recensione" | `guest_responder.py --post-stay` |
+| "mandagli il modulo" | `guest_responder.py --form` |
+
+---
+
+## Section 6: Voice Optimization
 
 Rules for ALL TTS responses:
 - **Max 2 sentences** per TTS call (max 15 words total)

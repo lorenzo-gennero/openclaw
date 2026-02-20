@@ -48,6 +48,21 @@ python3 ~/.openclaw/workspace/nuki.py --lock           # remote lock
 python3 ~/.openclaw/workspace/nuki.py --logs           # activity log
 ```
 
+## Guest Messaging: Draft Replies in Lorenzo's Voice
+When Lorenzo asks to reply to a guest or draft a message, use the guest-responder:
+```bash
+# Templates
+python3 ~/.openclaw/workspace/guest_responder.py --welcome "Name" Milano
+python3 ~/.openclaw/workspace/guest_responder.py --checkin "Name" Drovetti --code 345678
+python3 ~/.openclaw/workspace/guest_responder.py --during-stay "Name"
+python3 ~/.openclaw/workspace/guest_responder.py --checkout "Name" Milano
+python3 ~/.openclaw/workspace/guest_responder.py --post-stay "Name"
+python3 ~/.openclaw/workspace/guest_responder.py --form "Name" Drovetti ABC123
+# Add --lang it for Italian
+```
+For free-form replies, read `~/.openclaw/workspace/lorenzo_style_guide.md` and draft in Lorenzo's voice.
+**NEVER auto-send — always show draft to Lorenzo first.**
+
 ## Behavior
 - Never answer from memory — always run the script
 - Report check-ins and check-outs together

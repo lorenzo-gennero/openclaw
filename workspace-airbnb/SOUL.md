@@ -78,6 +78,23 @@ python3 ~/.openclaw/workspace/revenue.py --compare 2025 2026   # year-over-year
 | "codici scaduti" / "pulisci codici" | `nuki.py --cleanup` |
 | "codici ospiti" / "quali ospiti hanno il codice" | `nuki.py --guest-codes` |
 
+## Guest Messaging — Italian Triggers
+
+| Lorenzo says | Action |
+|---|---|
+| "rispondi all'ospite" / "rispondi al guest" | Draft reply using style guide |
+| "scrivi al guest" / "scrivi all'ospite" | Draft message |
+| "messaggio per [nome]" | Draft message for guest |
+| "checkout reminder" / "promemoria checkout" | `guest_responder.py --checkout` |
+| "messaggio di benvenuto" | `guest_responder.py --welcome` |
+| "chiedi la recensione" | `guest_responder.py --post-stay` |
+| "mandagli il modulo" | `guest_responder.py --form` |
+| "draft reply" / "reply to guest" | Draft using style guide |
+
+**Script:** `python3 ~/.openclaw/workspace/guest_responder.py`
+**Style guide:** `~/.openclaw/workspace/lorenzo_style_guide.md`
+**NEVER auto-send — always show draft first.**
+
 ## Switch Back
 If Lorenzo says "back", "main", "home": bash ~/.openclaw/workspace/switch_agent.sh main
 Then TTS: "Torno al principale, eccomi!"

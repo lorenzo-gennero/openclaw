@@ -1,0 +1,62 @@
+{
+  "Milano": {
+    "listing_name": "Milano (Viale Brianza)",
+    "address": "Viale Brianza, Milano",
+    "checkin_video": "https://youtu.be/DtPWgIwZGfw",
+    "elevator_video": "https://youtu.be/VWsDkN7Zwus",
+    "floor": "7th floor",
+    "key_return": "Leave the keys on the table",
+    "form_link": "https://docs.google.com/forms/d/e/1FAIpQLSdDYGjTwIaFbqpAsNdjmKl_BGSirNk1cvNA-y0muYdc1RKKrw/viewform?vc=0&c=0&w=1&flr=0&usp=mail_form_link",
+    "form_explanation_en": "In Italy, short-term rentals are required to register all guests just like hotels. This is why we need this information. It will be submitted to the Tourism office and then removed from our records.",
+    "form_explanation_it": "Tutte le case e appartamenti vacanza hanno l'obbligo di registrare tutti i propri ospiti, come gli hotel. Dopo aver inviato i dati alla questura, i vostri dati verranno eliminati.",
+    "parking_name": "Parcheggio Corso Bolzano - Stazione Porta Susa",
+    "parking_phone": "+39 011 517 8983",
+    "parking_link": "https://maps.app.goo.gl/arVLd79rK86K74xv9",
+    "phone": "+393270556406",
+    "has_nuki": true,
+    "checkin_method": "nuki_code",
+    "recommendations_link": null
+  },
+  "Drovetti": {
+    "listing_name": "Drovetti (Via Drovetti, Torino)",
+    "address": "Via Drovetti, Torino",
+    "checkin_video": "https://youtu.be/F5uMElJKNUw",
+    "lockbox_code": "3006",
+    "key_return": "Leave the keys in the lockbox",
+    "form_link": "https://host.mymaisonapp.com/public/t/qJ1lcmKoc5mCKf_wChTCtg/bookings/{booking_ref}",
+    "form_explanation_en": "In Italy, short-term rentals are required to register all guests just like hotels. This is why we need this information. It will be submitted to the Tourism office and then removed from our records.",
+    "form_explanation_it": "Tutte le case e appartamenti vacanza hanno l'obbligo di registrare tutti i propri ospiti, come gli hotel. Dopo aver inviato i dati alla questura, i vostri dati verranno eliminati.",
+    "phone": "+393270556406",
+    "has_nuki": false,
+    "checkin_method": "lockbox_remote_buzzer",
+    "remote_buzzer_note_en": "Please notify us 20 minutes before your arrival via the chat so we can be ready to open the building door remotely.",
+    "remote_buzzer_note_it": "Avvisateci 20 minuti prima del vostro arrivo tramite la chat in modo da essere pronti ad aprirvi il portone condominiale da remoto.",
+    "recommendations_link": null
+  },
+  "Bardonecchia": {
+    "listing_name": "Bardonecchia (Via Melezet)",
+    "address": "Via Melezet, Bardonecchia",
+    "key_return": "Leave the keys on the table",
+    "form_link": "https://docs.google.com/forms/d/e/1FAIpQLSdDYGjTwIaFbqpAsNdjmKl_BGSirNk1cvNA-y0muYdc1RKKrw/viewform?vc=0&c=0&w=1&flr=0&usp=mail_form_link",
+    "form_explanation_en": "In Italy, short-term rentals are required to register all guests just like hotels. This is why we need this information. It will be submitted to the Tourism office and then removed from our records.",
+    "form_explanation_it": "Tutte le case e appartamenti vacanza hanno l'obbligo di registrare tutti i propri ospiti, come gli hotel. Dopo aver inviato i dati alla questura, i vostri dati verranno eliminati.",
+    "phone": "+393270556406",
+    "has_nuki": false,
+    "checkin_method": "key_handoff",
+    "checkin_time": "16:00 - 02:00",
+    "recommendations_link": "https://v2.hostfully.com/gwznxzs/recommendations/activities"
+  },
+  "Giacinto Collegno": {
+    "listing_name": "Giacinto Collegno (Via Collegno, Torino)",
+    "address": "Via Collegno, Torino",
+    "map_link": "https://goo.gl/maps/to2SWbArBrp5xL9J8",
+    "key_return": "Leave the keys on the table",
+    "form_link": "https://docs.google.com/forms/d/e/1FAIpQLSdDYGjTwIaFbqpAsNdjmKl_BGSirNk1cvNA-y0muYdc1RKKrw/viewform?vc=0&c=0&w=1&flr=0&usp=mail_form_link",
+    "form_explanation_en": "In Italy, short-term rentals are required to register all guests just like hotels. This is why we need this information. It will be submitted to the Tourism office and then removed from our records.",
+    "form_explanation_it": "Tutte le case e appartamenti vacanza hanno l'obbligo di registrare tutti i propri ospiti, come gli hotel. Dopo aver inviato i dati alla questura, i vostri dati verranno eliminati.",
+    "phone": "+393270556406",
+    "has_nuki": false,
+    "checkin_method": "key_handoff",
+    "recommendations_link": null
+  }
+}
