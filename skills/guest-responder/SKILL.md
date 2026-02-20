@@ -114,5 +114,7 @@ For messages that don't fit a template (complaints, questions, custom situations
 - **Use Lorenzo's voice** — warm, direct, professional (see style guide)
 - **1-2 emojis max** — 😊 👍🏻 are most common
 - **Property-specific details** — check `guest_config.json` for videos, codes, links
+- **Troubleshooting videos** — when guests report problems (sofa bed, hot water, electricity, elevator), check `guest_config.json` → `troubleshooting_videos` and include the relevant YouTube link in the reply
+- **Recommendations** — when guests ask for tips/restaurants/things to do, link the property's Hostfully guidebook from `guest_config.json` → `recommendations_link`
 - **Config file:** `~/.openclaw/workspace/guest_config.json` (editable by Lorenzo)
 - **Style guide:** `~/.openclaw/workspace/lorenzo_style_guide.md` (50+ real examples)

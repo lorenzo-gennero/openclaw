@@ -15,7 +15,13 @@
     "phone": "+393270556406",
     "has_nuki": true,
     "checkin_method": "nuki_code",
-    "recommendations_link": null
+    "recommendations_link": "https://v2.hostfully.com/gjmkcxh",
+    "troubleshooting_videos": {
+      "sofa_bed_open": "https://youtu.be/BLICzW5BnLU",
+      "sofa_bed_close": "https://youtu.be/BR-SsjCgqCY",
+      "hot_water_shower": "https://youtu.be/gMiZkQbm04c",
+      "electricity_cellar": "https://youtu.be/Th1pxWFlLuU"
+    }
   },
   "Drovetti": {
     "listing_name": "Drovetti (Via Drovetti, Torino)",
@@ -31,7 +37,8 @@
     "checkin_method": "lockbox_remote_buzzer",
     "remote_buzzer_note_en": "Please notify us 20 minutes before your arrival via the chat so we can be ready to open the building door remotely.",
     "remote_buzzer_note_it": "Avvisateci 20 minuti prima del vostro arrivo tramite la chat in modo da essere pronti ad aprirvi il portone condominiale da remoto.",
-    "recommendations_link": null
+    "recommendations_link": "https://v2.hostfully.com/gwznxzs/recommendations/activities",
+    "troubleshooting_videos": {}
   },
   "Bardonecchia": {
     "listing_name": "Bardonecchia (Via Melezet)",
@@ -44,7 +51,11 @@
     "has_nuki": false,
     "checkin_method": "key_handoff",
     "checkin_time": "16:00 - 02:00",
-    "recommendations_link": "https://v2.hostfully.com/gwznxzs/recommendations/activities"
+    "checkin_video": "https://youtu.be/YBYohemaAo8",
+    "checkin_video_it": "https://youtu.be/-S1LGzRrON8",
+    "lockbox_code": "3006",
+    "recommendations_link": "https://v2.hostfully.com/gqdmdtq",
+    "troubleshooting_videos": {}
   },
   "Giacinto Collegno": {
     "listing_name": "Giacinto Collegno (Via Collegno, Torino)",
@@ -57,6 +68,9 @@
     "phone": "+393270556406",
     "has_nuki": false,
     "checkin_method": "key_handoff",
-    "recommendations_link": null
+    "checkin_video": "https://youtu.be/sgj4z3YtONE",
+    "checkin_video_it": "https://youtu.be/Z8Yjq42AAlA",
+    "recommendations_link": "https://v2.hostfully.com/gnrsxkh",
+    "troubleshooting_videos": {}
   }
 }
