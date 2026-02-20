@@ -11,7 +11,13 @@ Usage:
   python3 hospitable.py --conversations        → recent guest conversations
   python3 hospitable.py --token-check          → validate API token health
   python3 hospitable.py --reviews              → property reviews
+  python3 hospitable.py --calendar [YYYY-MM]   → visual calendar with pricing
+  python3 hospitable.py --guest <name>         → search guest by name
+  python3 hospitable.py --gaps [N]             → find unbooked nights (next N days)
   python3 hospitable.py --menu                 → interactive menu
+
+  Add --property <name> to filter any command to one property.
+  Property aliases: milano, bardo, drovetti, giacinto
 """
 
 import sys
@@ -35,7 +41,43 @@ PROPERTIES = {
     "4cb5b686-ed1e-470c-90e8-e50500b0d77a": "Giacinto Collegno (Turin)",
 }
 
+PROPERTY_ALIASES = {
+    "milano": "cd4bf5fb-16ef-49c8-b3db-93437e5f009f",
+    "milan": "cd4bf5fb-16ef-49c8-b3db-93437e5f009f",
+    "brianza": "cd4bf5fb-16ef-49c8-b3db-93437e5f009f",
+    "bardonecchia": "912db8e2-ef92-44fa-b257-6f843c87e520",
+    "bardo": "912db8e2-ef92-44fa-b257-6f843c87e520",
+    "drovetti": "ec148f18-8c8a-456b-8bd9-b86e1c4086f9",
+    "torino": "ec148f18-8c8a-456b-8bd9-b86e1c4086f9",
+    "turin": "ec148f18-8c8a-456b-8bd9-b86e1c4086f9",
+    "giacinto": "4cb5b686-ed1e-470c-90e8-e50500b0d77a",
+    "collegno": "4cb5b686-ed1e-470c-90e8-e50500b0d77a",
+}
+
 BASE_URL = "https://public.api.hospitable.com/v2"
+
+def _resolve_property(name: str) -> dict:
+    """Resolve a property alias to {id: ..., name: ...}. Returns None if not found."""
+    key = name.lower().strip()
+    if key in PROPERTY_ALIASES:
+        pid = PROPERTY_ALIASES[key]
+        return {"id": pid, "name": PROPERTIES[pid]}
+    # Try matching against property names
+    for pid, pname in PROPERTIES.items():
+        if key in pname.lower():
+            return {"id": pid, "name": pname}
+    return None
+
+def _filter_properties(prop_filter: str = None) -> dict:
+    """Return PROPERTIES dict filtered by alias. If None, return all."""
+    if not prop_filter:
+        return PROPERTIES
+    resolved = _resolve_property(prop_filter)
+    if resolved:
+        return {resolved["id"]: resolved["name"]}
+    print(f"  Unknown property: {prop_filter}")
+    print(f"  Valid: {', '.join(sorted(PROPERTY_ALIASES.keys()))}")
+    sys.exit(1)
 
 # ── HTTP Helpers ──────────────────────────────────────────────────────────────
 
@@ -134,18 +176,34 @@ def _fetch_all_pages(prop_id: str, start: str, end: str, includes: list[str] = N
         page += 1
     return all_items
 
-def get_reservations(start: str, end: str, includes: list[str] = None) -> list[dict]:
+def get_reservations(start: str, end: str, includes: list[str] = None, props: dict = None) -> list[dict]:
+    if props is None:
+        props = PROPERTIES
     all_reservations = []
-    for prop_id in PROPERTIES:
+    for prop_id in props:
         all_reservations.extend(_fetch(prop_id, start, end, includes))
     return all_reservations
 
-def get_all_reservations(start: str, end: str, includes: list[str] = None) -> list[dict]:
+def get_all_reservations(start: str, end: str, includes: list[str] = None, props: dict = None) -> list[dict]:
     """Get all reservations across all properties, with pagination."""
+    if props is None:
+        props = PROPERTIES
     all_reservations = []
-    for prop_id in PROPERTIES:
+    for prop_id in props:
         all_reservations.extend(_fetch_all_pages(prop_id, start, end, includes))
     return all_reservations
+
+def get_calendar(prop_id: str, start: str, end: str) -> list[dict]:
+    """Fetch calendar data (availability + pricing) for a property."""
+    try:
+        data = _api_get(f"properties/{prop_id}/calendar", [
+            ("start_date", start),
+            ("end_date", end),
+        ])
+        return data.get("data", {}).get("days", []) if isinstance(data, dict) else []
+    except Exception as e:
+        print(f"  Error fetching calendar: {e}")
+        return []
 
 def get_guest_messages(reservation_id: str) -> list[dict]:
     """Fetch messages for a reservation."""
@@ -411,6 +469,233 @@ def show_conversations():
         print(f"     Reservation: {res_id}")
         print()
 
+def show_calendar(month: str = None, prop_filter: str = None):
+    """Visual calendar showing availability and pricing per property."""
+    from calendar import monthrange, month_name
+    today = date.today()
+
+    if month:
+        if len(month) == 7:  # YYYY-MM
+            year, mon = int(month[:4]), int(month[5:7])
+        elif len(month) == 4 and month.isdigit():  # Just month number
+            year, mon = today.year, int(month)
+        else:
+            year, mon = today.year, today.month
+    else:
+        year, mon = today.year, today.month
+
+    days_in_month = monthrange(year, mon)[1]
+    start = f"{year}-{mon:02d}-01"
+    end = f"{year}-{mon:02d}-{days_in_month:02d}"
+    props = _filter_properties(prop_filter)
+
+    print(f"\n📅  Calendar — {month_name[mon]} {year}\n")
+
+    for prop_id, prop_name in props.items():
+        days = get_calendar(prop_id, start, end)
+        if not days:
+            print(f"  🏡 {prop_name}: no calendar data\n")
+            continue
+
+        # Build day map
+        day_map = {}
+        for d in days:
+            day_map[d["date"]] = d
+
+        booked = 0
+        available = 0
+        revenue_potential = 0
+
+        print(f"  🏡 {prop_name}")
+        print(f"  {'Mo':>4} {'Tu':>4} {'Mi':>4} {'Do':>4} {'Fr':>4} {'Sa':>4} {'So':>4}")
+
+        # Find what day of week the 1st falls on (0=Mon)
+        first_dow = date(year, mon, 1).weekday()
+        row = "  " + "    " * first_dow
+
+        for day_num in range(1, days_in_month + 1):
+            day_str = f"{year}-{mon:02d}-{day_num:02d}"
+            info = day_map.get(day_str, {})
+            status = info.get("status", {})
+            available_flag = status.get("available", True)
+            reason = status.get("reason", "")
+
+            if reason == "RESERVED":
+                marker = f" \033[91m{day_num:2d}\033[0m "  # red
+                booked += 1
+            elif not available_flag:
+                marker = f" \033[90m{day_num:2d}\033[0m "  # gray (blocked)
+            else:
+                marker = f" \033[92m{day_num:2d}\033[0m "  # green
+                available += 1
+                price = info.get("price", {}).get("amount", 0)
+                revenue_potential += price
+
+            row += marker
+            dow = date(year, mon, day_num).weekday()
+            if dow == 6:  # Sunday
+                print(row)
+                row = "  "
+
+        if row.strip():
+            print(row)
+
+        occ_pct = (booked / days_in_month * 100) if days_in_month > 0 else 0
+        print(f"     {booked} booked · {available} available · {occ_pct:.0f}% occupancy")
+        if revenue_potential > 0:
+            print(f"     €{revenue_potential / 100:.0f} potential revenue from open nights")
+        print()
+        time.sleep(0.3)
+
+    # Legend
+    print(f"  Legend: \033[91m■\033[0m booked  \033[92m■\033[0m available  \033[90m■\033[0m blocked\n")
+
+
+def show_guest(search_name: str, prop_filter: str = None):
+    """Search for a guest by name across recent reservations."""
+    today = date.today()
+    # Search ±90 days
+    start = (today - timedelta(days=90)).isoformat()
+    end = (today + timedelta(days=90)).isoformat()
+    props = _filter_properties(prop_filter)
+
+    print(f"\n🔍  Searching for \"{search_name}\"...\n")
+
+    reservations = get_all_reservations(start, end, includes=["guest", "financials"], props=props)
+    search_lower = search_name.lower()
+
+    matches = []
+    for r in reservations:
+        guest_nm = _guest_name(r).lower()
+        if search_lower in guest_nm:
+            matches.append(r)
+
+    if not matches:
+        print(f"  No guests matching \"{search_name}\" found in ±90 day window.\n")
+        return
+
+    matches.sort(key=lambda r: r.get("arrival_date", ""), reverse=True)
+    print(f"  Found {len(matches)} reservation(s):\n")
+
+    for r in matches:
+        name = _guest_name(r)
+        prop = r.get("_property_name", "?")
+        arrival = _date_part(r.get("arrival_date", ""))
+        departure = _date_part(r.get("departure_date", ""))
+        nights = r.get("nights", "?")
+        platform = r.get("platform", "")
+        code = r.get("code", "")
+        conv_id = r.get("conversation_id", "")
+        res_id = r.get("id", "")
+
+        guest = r.get("guest") or {}
+        lang = guest.get("language", "?")
+        location = guest.get("location", "")
+        email = guest.get("email", "")
+        phones = guest.get("phone_numbers", [])
+
+        guests_info = r.get("guests") or {}
+        total_guests = guests_info.get("total", "?")
+        adults = guests_info.get("adult_count", 0)
+        children = guests_info.get("child_count", 0)
+
+        status = (r.get("reservation_status") or {}).get("current", {}).get("category", "?")
+        financials = r.get("financials", {})
+        total_price = financials.get("guest", {}).get("total_price", {}).get("formatted", "?") if financials else "?"
+
+        # Status indicator
+        today_str = today.isoformat()
+        if status == "cancelled":
+            icon = "❌"
+        elif arrival > today_str:
+            icon = "🟢"  # upcoming
+        elif departure > today_str:
+            icon = "🛏"  # currently staying
+        else:
+            icon = "🔵"  # past
+
+        print(f"  {icon} {name}  @{prop}")
+        print(f"     {arrival} → {departure} · {nights}n · {total_guests}g ({adults}a {children}c) · {platform}")
+        print(f"     Status: {status} · Total: {total_price} · Lang: {lang}")
+        if location:
+            print(f"     From: {location}")
+        if email:
+            print(f"     Email: {email}")
+        if phones:
+            print(f"     Phone: {', '.join(phones)}")
+        print(f"     Reservation: {res_id} · Code: #{code}")
+        if conv_id:
+            print(f"     Conversation: {conv_id}")
+        print()
+
+
+def show_gaps(days: int = 30, prop_filter: str = None):
+    """Find unbooked nights across properties — revenue opportunities."""
+    today = date.today()
+    end = today + timedelta(days=days)
+    start_str = today.isoformat()
+    end_str = end.isoformat()
+    props = _filter_properties(prop_filter)
+
+    print(f"\n📊  Availability Gaps — next {days} day(s)\n")
+
+    total_gap_nights = 0
+    total_potential = 0
+
+    for prop_id, prop_name in props.items():
+        cal_days = get_calendar(prop_id, start_str, end_str)
+        if not cal_days:
+            continue
+
+        # Find consecutive available stretches
+        gaps = []
+        current_gap = []
+        for d in cal_days:
+            if d.get("status", {}).get("available", False):
+                current_gap.append(d)
+            else:
+                if current_gap:
+                    gaps.append(current_gap)
+                    current_gap = []
+        if current_gap:
+            gaps.append(current_gap)
+
+        if not gaps:
+            print(f"  🏡 {prop_name}: fully booked! 🎉\n")
+            continue
+
+        gap_nights = sum(len(g) for g in gaps)
+        total_gap_nights += gap_nights
+        prop_potential = sum(
+            d.get("price", {}).get("amount", 0)
+            for g in gaps for d in g
+        )
+        total_potential += prop_potential
+
+        print(f"  🏡 {prop_name} — {gap_nights} open night(s)")
+
+        for gap in gaps:
+            gap_start = gap[0]["date"]
+            gap_end = gap[-1]["date"]
+            gap_len = len(gap)
+            avg_price = sum(d.get("price", {}).get("amount", 0) for d in gap) // max(gap_len, 1)
+            potential = sum(d.get("price", {}).get("amount", 0) for d in gap)
+
+            if gap_len == 1:
+                print(f"     {gap_start} (1 night) · €{avg_price / 100:.0f}/night")
+            else:
+                print(f"     {gap_start} → {gap_end} ({gap_len} nights) · €{avg_price / 100:.0f}/night avg · €{potential / 100:.0f} potential")
+        print()
+        time.sleep(0.3)
+
+    if total_gap_nights > 0:
+        print(f"  ── SUMMARY ───────────────────────────────────────")
+        print(f"  {total_gap_nights} total open nights across {len(props)} property(ies)")
+        print(f"  €{total_potential / 100:.0f} total potential revenue at current pricing\n")
+    elif not prop_filter:
+        print(f"  All properties fully booked for next {days} days! 🎉\n")
+
+
 def show_token_check():
     """Validate token with lightweight API call and check file age."""
     print("\n🔑  Token Health Check\n")
@@ -484,8 +769,25 @@ def interactive_menu():
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
+def _parse_global_args(args: list) -> tuple:
+    """Extract --property flag from args, return (remaining_args, prop_filter)."""
+    prop_filter = None
+    remaining = []
+    i = 0
+    while i < len(args):
+        if args[i] == "--property" and i + 1 < len(args):
+            prop_filter = args[i + 1]
+            i += 2
+        else:
+            remaining.append(args[i])
+            i += 1
+    return remaining, prop_filter
+
+
 def main():
-    args = sys.argv[1:]
+    raw_args = sys.argv[1:]
+    args, prop_filter = _parse_global_args(raw_args)
+
     if not args:
         show_day(date.today().isoformat())
     elif args[0] == "--upcoming":
@@ -506,6 +808,20 @@ def main():
         interactive_menu()
     elif args[0] in ("--reviews", "-r"):
         show_reviews()
+    elif args[0] == "--calendar":
+        month = args[1] if len(args) > 1 else None
+        show_calendar(month, prop_filter)
+    elif args[0] == "--guest":
+        if len(args) < 2:
+            print("Usage: hospitable.py --guest <name>")
+            sys.exit(1)
+        show_guest(" ".join(args[1:]), prop_filter)
+    elif args[0] == "--gaps":
+        try:
+            gap_days = int(args[1]) if len(args) > 1 else 30
+        except ValueError:
+            gap_days = 30
+        show_gaps(gap_days, prop_filter)
     elif args[0] in ("--help", "-h"):
         print(__doc__)
     elif len(args) >= 2:

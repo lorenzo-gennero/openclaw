@@ -1,6 +1,6 @@
 ---
 name: hospitable
-description: Manage Airbnb properties, reservations, guest messages and calendar via the Hospitable API. Use this skill whenever Lorenzo asks about properties, bookings, check-ins, check-outs, guests, or wants to send messages to guests.
+description: Manage Airbnb properties, reservations and check-ins via Hospitable API. Use when Lorenzo asks about properties, bookings, check-ins, check-outs or guests IN ANY LANGUAGE (Italian, English, French, etc.)
 metadata:
   openclaw:
     emoji: 🏠
@@ -10,7 +10,7 @@ metadata:
 
 ## CRITICAL — Run BEFORE Answering ANY Property Question
 
-**ALWAYS run the appropriate command before answering ANY question about properties, bookings, guests, check-ins, check-outs, revenue, or occupancy. Never answer from memory.**
+**ALWAYS run the appropriate command before answering ANY question about properties, bookings, guests, check-ins, check-outs, revenue, or occupancy. Never answer from memory. Never say you can't retrieve data.**
 
 ---
 
@@ -43,6 +43,22 @@ python3 ~/.openclaw/workspace/hospitable.py --token-check
 # Reviews
 python3 ~/.openclaw/workspace/hospitable.py --reviews
 
+# Calendar: visual availability + pricing per property
+python3 ~/.openclaw/workspace/hospitable.py --calendar              # current month
+python3 ~/.openclaw/workspace/hospitable.py --calendar 2026-03      # specific month
+
+# Guest search: find a guest by name (±90 days window)
+python3 ~/.openclaw/workspace/hospitable.py --guest "Mario"
+
+# Availability gaps: find unbooked nights (revenue opportunities)
+python3 ~/.openclaw/workspace/hospitable.py --gaps                  # next 30 days
+python3 ~/.openclaw/workspace/hospitable.py --gaps 60               # next 60 days
+
+# Property filter: add --property <name> to ANY command above
+python3 ~/.openclaw/workspace/hospitable.py --calendar --property milano
+python3 ~/.openclaw/workspace/hospitable.py --gaps --property drovetti
+# Aliases: milano, bardo, drovetti, giacinto, turin, collegno
+
 # Revenue report (separate script)
 python3 ~/.openclaw/workspace/revenue.py                       # YTD
 python3 ~/.openclaw/workspace/revenue.py 2025                  # full year
@@ -58,28 +74,36 @@ python3 ~/.openclaw/workspace/revenue.py --compare 2025 2026   # year-over-year
 - `prenotazioni`, `quante prenotazioni`, `prenotazioni questa settimana`
 - `chi arriva`, `chi arriva oggi`, `chi arriva questa settimana`
 - `chi parte`, `chi parte oggi`
-- `ospiti`, `quanti ospiti`, `prossimi giorni`
+- `ospiti`, `quanti ospiti`
 - `check-in`, `check-out`
-- `settimana`, `mese`, `oggi`
+- `settimana`, `mese`, `oggi`, `prossimi giorni`
 - `Milano`, `Bardonecchia`, `Torino`, `Drovetti`, `Giacinto`
 - `quanto ho guadagnato`, `entrate`, `ricavi`, `revenue`
-- `occupazione`, `tasso di occupazione`
+- `occupazione`, `tasso di occupazione`, `com'è l'occupazione`
 - `conversazioni`, `messaggi ospiti`
+- `Massimo` (when asking property questions)
+- `casa`, `appartamento`, `affitti`
+- `calendario`, `disponibilità`, `notti libere`, `notti vuote`, `buchi`
+- `cerca ospite`, `trova ospite`, `chi è [nome]`
 
 ### English 🇬🇧
 - `booking`, `bookings`, `how many bookings`
 - `check-in`, `check-out`, `upcoming`, `next few days`
 - `guests`, `who's arriving`, `who's leaving`
+- `reservation`, `reservations`
+- `this week`, `today`, `this month`
 - `revenue`, `earnings`, `income`, `compare`
-- `occupancy`, `occupancy rate`
+- `occupancy`, `occupancy rate`, `how full`
 - `conversations`, `guest messages`
-- Any property name
+- Any property name: `Milan`, `Bardonecchia`, `Drovetti`, `Giacinto`
+- `calendar`, `availability`, `open nights`, `gaps`, `unbooked`
+- `find guest`, `search guest`, `who is [name]`
 
 **Do not wait for English. Do not ask for clarification. Just run the script.**
 
 ---
 
-## Properties
+## Property ID Mapping
 
 | Name | Full UUID |
 |------|-----------|
@@ -88,11 +112,48 @@ python3 ~/.openclaw/workspace/revenue.py --compare 2025 2026   # year-over-year
 | Drovetti (Via Drovetti, Torino) | `ec148f18-8c8a-456b-8bd9-b86e1c4086f9` |
 | Giacinto Collegno (Via Collegno, Torino) | `4cb5b686-ed1e-470c-90e8-e50500b0d77a` |
 
+Always translate UUIDs and reservation codes to human-readable names. Never show raw UUIDs alone.
+
+---
+
+## Workflow
+
+1. **Run the script first** — always
+2. **Parse the output** — it gives property name, guest name, dates, nights, guests count
+3. **Summarize in Lorenzo's language** — Italian if he asked in Italian
+4. **Be concise** — 1-2 sentences via TTS
+
+---
+
+## Output Format (from script)
+
+The script returns grouped results:
+```
+🏡 Property Name (N reservation(s))
+YYYY-MM-DD → YYYY-MM-DD  Guest Name  (Xn · Yg · #CODE · platform)
+```
+
+Fields: `nights (Xn)`, `guests (Yg)`, `reservation code (#...)`, `platform (airbnb/booking/manual)`
+
+---
+
+## Raw API (advanced use only)
+
+Token: `cat ~/.openclaw/workspace/hospitable_token.txt`
+
+```bash
+TOKEN=$(cat ~/.openclaw/workspace/hospitable_token.txt)
+curl -sg "https://public.api.hospitable.com/v2/properties" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Accept: application/json"
+```
+
 ---
 
 ## Rules
 
 - **ALWAYS run hospitable.py first** — never answer from cached/remembered data
-- **Respond in the same language Lorenzo used**
+- **Respond in the same language Lorenzo used** — Italian question → Italian answer
 - **Confirm before sending any guest messages**
 - **Never show raw UUIDs** — always use property names
+- The script can be imported: `from hospitable import get_reservations, show_upcoming, show_occupancy`

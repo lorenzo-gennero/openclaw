@@ -43,6 +43,22 @@ python3 ~/.openclaw/workspace/hospitable.py --token-check
 # Reviews
 python3 ~/.openclaw/workspace/hospitable.py --reviews
 
+# Calendar: visual availability + pricing per property
+python3 ~/.openclaw/workspace/hospitable.py --calendar              # current month
+python3 ~/.openclaw/workspace/hospitable.py --calendar 2026-03      # specific month
+
+# Guest search: find a guest by name (±90 days window)
+python3 ~/.openclaw/workspace/hospitable.py --guest "Mario"
+
+# Availability gaps: find unbooked nights (revenue opportunities)
+python3 ~/.openclaw/workspace/hospitable.py --gaps                  # next 30 days
+python3 ~/.openclaw/workspace/hospitable.py --gaps 60               # next 60 days
+
+# Property filter: add --property <name> to ANY command above
+python3 ~/.openclaw/workspace/hospitable.py --calendar --property milano
+python3 ~/.openclaw/workspace/hospitable.py --gaps --property drovetti
+# Aliases: milano, bardo, drovetti, giacinto, turin, collegno
+
 # Revenue report (separate script)
 python3 ~/.openclaw/workspace/revenue.py                       # YTD
 python3 ~/.openclaw/workspace/revenue.py 2025                  # full year
@@ -67,6 +83,8 @@ python3 ~/.openclaw/workspace/revenue.py --compare 2025 2026   # year-over-year
 - `conversazioni`, `messaggi ospiti`
 - `Massimo` (when asking property questions)
 - `casa`, `appartamento`, `affitti`
+- `calendario`, `disponibilità`, `notti libere`, `notti vuote`, `buchi`
+- `cerca ospite`, `trova ospite`, `chi è [nome]`
 
 ### English 🇬🇧
 - `booking`, `bookings`, `how many bookings`
@@ -78,6 +96,8 @@ python3 ~/.openclaw/workspace/revenue.py --compare 2025 2026   # year-over-year
 - `occupancy`, `occupancy rate`, `how full`
 - `conversations`, `guest messages`
 - Any property name: `Milan`, `Bardonecchia`, `Drovetti`, `Giacinto`
+- `calendar`, `availability`, `open nights`, `gaps`, `unbooked`
+- `find guest`, `search guest`, `who is [name]`
 
 **Do not wait for English. Do not ask for clarification. Just run the script.**
 
