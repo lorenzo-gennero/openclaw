@@ -24,7 +24,7 @@ import time
 import urllib.request
 import urllib.parse
 import urllib.error
-from datetime import datetime, date, timezone
+from datetime import datetime, date, timedelta, timezone
 from pathlib import Path
 
 # ── Config ───────────────────────────────────────────────────────────────────
@@ -472,26 +472,37 @@ def cleanup_codes():
         print(f"\n  \u2705 Removed {removed} expired code(s).\n")
 
 def show_guest_codes():
-    """Cross-reference Hospitable reservations with active Nuki codes."""
-    print("\n\U0001f510  Guest Codes — Hospitable Cross-Reference\n")
+    """Cross-reference Hospitable Milano reservations with active Nuki codes."""
+    print("\n\U0001f510  Guest Codes — Milano Nuki × Hospitable\n")
 
-    # Get upcoming reservations via hospitable.py
-    hospitable_script = Path.home() / ".openclaw/workspace/hospitable.py"
-    if not hospitable_script.exists():
-        print("  \u274c hospitable.py not found. Cannot cross-reference.\n")
+    # Import hospitable module directly instead of subprocess
+    sys.path.insert(0, str(Path.home() / ".openclaw/workspace"))
+    try:
+        import hospitable
+    except ImportError:
+        print("  \u274c Cannot import hospitable module.\n")
         return
+
+    # Fetch Milano reservations for the next 14 days
+    today = date.today()
+    start_str = today.isoformat()
+    end_str = (today + timedelta(days=14)).isoformat()
+    milano_id = "cd4bf5fb-16ef-49c8-b3db-93437e5f009f"
+    milano_props = {milano_id: "Milano"}
 
     try:
-        result = subprocess.run(
-            [sys.executable, str(hospitable_script), "--upcoming", "14"],
-            capture_output=True, text=True, timeout=30,
-        )
-        upcoming_output = result.stdout
+        # Wider range to catch currently-staying guests
+        wide_start = (today - timedelta(days=7)).isoformat()
+        reservations = hospitable.get_reservations(wide_start, end_str, includes=["guest"], props=milano_props)
     except Exception as e:
-        print(f"  \u274c Error running hospitable.py: {e}\n")
+        print(f"  \u274c Error fetching reservations: {e}\n")
         return
 
-    # Get all active codes
+    if not reservations:
+        print("  No upcoming Milano reservations in the next 14 days.\n")
+        return
+
+    # Get all active Nuki keypad codes
     locks = get_smartlocks()
     active_codes = {}
     for lk in locks:
@@ -501,45 +512,107 @@ def show_guest_codes():
             for auth in auths:
                 if auth.get("type") == 13 and auth.get("enabled"):
                     code_name = auth.get("name", "").lower().strip()
+                    from_raw = auth.get("allowedFromDate", "")
+                    until_raw = auth.get("allowedUntilDate", "")
                     active_codes[code_name] = {
                         "id": auth.get("id"),
                         "name": auth.get("name"),
-                        "from": _fmt_datetime(auth.get("allowedFromDate", "")),
-                        "until": _fmt_datetime(auth.get("allowedUntilDate", "")),
+                        "code": auth.get("code", ""),
+                        "from": _fmt_datetime(from_raw),
+                        "until": _fmt_datetime(until_raw),
+                        "from_raw": from_raw,
+                        "until_raw": until_raw,
                         "lock": get_lock_name(lk),
                     }
         except Exception:
             continue
 
-    # Print upcoming reservations output
-    print("  \u250c\u2500\u2500 Upcoming Reservations:")
-    print(upcoming_output)
+    # Categorize reservations
+    upcoming_checkins = []
+    currently_staying = []
+    upcoming_checkouts = []
+
+    for r in reservations:
+        arrival = (r.get("arrival_date", "") or "")[:10]
+        departure = (r.get("departure_date", "") or "")[:10]
+        guest = r.get("guest") or {}
+        guest_name = f"{guest.get('first_name', '')} {guest.get('last_name', '')}".strip() or "Unknown"
+
+        if arrival >= start_str:
+            upcoming_checkins.append({"name": guest_name, "arrival": arrival, "departure": departure, "r": r})
+        elif departure > start_str:
+            currently_staying.append({"name": guest_name, "arrival": arrival, "departure": departure, "r": r})
+
+        if departure >= start_str and departure <= end_str:
+            upcoming_checkouts.append({"name": guest_name, "departure": departure})
+
+    # Print currently staying
+    if currently_staying:
+        print(f"  \u250c\u2500\u2500 Currently Staying ({len(currently_staying)})")
+        for g in currently_staying:
+            print(f"    \U0001f6cf  {g['name']}  {g['arrival']} → {g['departure']}")
+        print()
+
+    # Print upcoming check-ins
+    if upcoming_checkins:
+        print(f"  \u250c\u2500\u2500 Upcoming Check-ins ({len(upcoming_checkins)})")
+        for g in sorted(upcoming_checkins, key=lambda x: x["arrival"]):
+            print(f"    \u2708\ufe0f  {g['name']}  arrives {g['arrival']}  ({g['departure']})")
+        print()
 
     # Print active codes
-    print("  \u250c\u2500\u2500 Active Keypad Codes:")
+    print(f"  \u250c\u2500\u2500 Active Keypad Codes ({len(active_codes)})")
     if active_codes:
-        for code_name, info in active_codes.items():
-            print(f"    \u2705 {info['name']}  ({info['from']} → {info['until']})  @{info['lock']}")
+        for cn, info in sorted(active_codes.items(), key=lambda x: x[1]["from"]):
+            print(f"    \U0001f511 {info['name']}  ({info['from']} → {info['until']})")
     else:
         print("    No active keypad codes.")
     print()
 
-    # Simple name matching to flag missing codes
-    # Parse guest names from hospitable output (lines with IN/OUT markers)
-    import re
-    guest_names = set()
-    for line in upcoming_output.split("\n"):
-        # Match patterns like "IN   Guest Name  @Property" or "OUT  Guest Name  @Property"
-        match = re.search(r"(?:IN|OUT)\s+(.+?)\s+@", line)
-        if match:
-            guest_names.add(match.group(1).strip().lower())
+    # Cross-reference: match guests to codes
+    def _match_code(guest_name):
+        """Find a Nuki code matching a guest name (fuzzy)."""
+        name_lower = guest_name.lower().strip()
+        parts = name_lower.split()
+        for cn, info in active_codes.items():
+            # Exact match
+            if name_lower == cn or name_lower in cn or cn in name_lower:
+                return info
+            # Match on first name or last name
+            for part in parts:
+                if len(part) > 2 and (part in cn or cn.startswith(part)):
+                    return info
+        return None
 
-    if guest_names:
-        print("  \u250c\u2500\u2500 Code Status per Guest:")
-        for guest in sorted(guest_names):
-            has_code = any(guest in cn or cn in guest for cn in active_codes)
-            status = "\u2705 has code" if has_code else "\u26a0\ufe0f  NO CODE"
-            print(f"    {status}  {guest.title()}")
+    # Status report: all upcoming check-ins + currently staying
+    all_guests = []
+    for g in currently_staying:
+        all_guests.append({**g, "status": "staying"})
+    for g in upcoming_checkins:
+        all_guests.append({**g, "status": "arriving"})
+
+    missing = []
+    print("  \u250c\u2500\u2500 Code Status")
+    for g in sorted(all_guests, key=lambda x: x.get("arrival", "")):
+        code_info = _match_code(g["name"])
+        if code_info:
+            print(f"    \u2705 {g['name']}  → code \"{code_info['name']}\" ({code_info['from']} → {code_info['until']})")
+        else:
+            icon = "\u26a0\ufe0f " if g["status"] == "arriving" else "\u274c"
+            label = f"arrives {g['arrival']}" if g["status"] == "arriving" else f"staying → {g['departure']}"
+            print(f"    {icon} {g['name']}  — NO CODE  ({label})")
+            missing.append(g)
+    print()
+
+    # Actionable suggestions for missing codes
+    if missing:
+        print(f"  \u250c\u2500\u2500 \u26a0\ufe0f  Action Needed: {len(missing)} guest(s) without codes")
+        for g in missing:
+            code = generate_code()
+            arrival = g["arrival"]
+            departure = g["departure"]
+            print(f"    \U0001f449 {g['name']}: suggested command:")
+            print(f"       python3 nuki.py --create-code \"{g['name']}\" {code} {arrival}T15:00 {departure}T11:00")
         print()
 
 def show_token_check():
