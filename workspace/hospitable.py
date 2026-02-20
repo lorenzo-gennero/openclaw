@@ -951,41 +951,48 @@ def show_token_check():
 def interactive_menu():
     while True:
         print("\n🏠 Hospitable Menu")
-        print("  1. Today's check-ins/check-outs")
-        print("  2. Specific date")
-        print("  3. Date range")
-        print("  4. Reviews")
-        print("  5. Send guest message")
-        print("  6. Upcoming (next 7 days)")
-        print("  7. Occupancy report")
-        print("  8. Recent conversations")
-        print("  9. Token check")
-        print("  0. Exit")
+        print("   1. Dashboard (daily overview)")
+        print("   2. Today's check-ins/check-outs")
+        print("   3. Upcoming (next 7 days)")
+        print("   4. Calendar (this month)")
+        print("   5. Gaps (unbooked nights)")
+        print("   6. Reviews")
+        print("   7. Reviews needing response")
+        print("   8. Occupancy report")
+        print("   9. Guest search")
+        print("  10. Conversations")
+        print("  11. Date range")
+        print("  12. Token check")
+        print("   0. Exit")
         choice = input("\n  Choice: ").strip()
 
         if choice == "1":
-            show_day(date.today().isoformat())
+            show_dashboard()
         elif choice == "2":
-            d = input("  Date (YYYY-MM-DD): ").strip()
-            show_day(d)
+            show_day(date.today().isoformat())
         elif choice == "3":
+            show_upcoming()
+        elif choice == "4":
+            show_calendar()
+        elif choice == "5":
+            show_gaps()
+        elif choice == "6":
+            show_reviews()
+        elif choice == "7":
+            show_reviews(mode="pending")
+        elif choice == "8":
+            show_occupancy()
+        elif choice == "9":
+            name = input("  Guest name: ").strip()
+            if name:
+                show_guest(name)
+        elif choice == "10":
+            show_conversations()
+        elif choice == "11":
             s = input("  Start (YYYY-MM-DD): ").strip()
             e = input("  End (YYYY-MM-DD): ").strip()
             show_range(s, e)
-        elif choice == "4":
-            show_reviews()
-        elif choice == "5":
-            cid = input("  Conversation ID: ").strip()
-            msg = input("  Message: ").strip()
-            ok = send_guest_message(cid, msg)
-            print("  ✅ Sent!" if ok else "  ❌ Failed.")
-        elif choice == "6":
-            show_upcoming()
-        elif choice == "7":
-            show_occupancy()
-        elif choice == "8":
-            show_conversations()
-        elif choice == "9":
+        elif choice == "12":
             show_token_check()
         elif choice == "0":
             break
