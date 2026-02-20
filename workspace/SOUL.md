@@ -185,6 +185,10 @@ Always translate UUIDs to human-readable property names. Never show raw UUIDs.
 
 When Lorenzo asks to reply to a guest, write a message, or draft a response — use the guest-responder skill. **Always show the draft to Lorenzo before sending.**
 
+### CRITICAL: Drafts Must Be TEXT, Not Voice
+
+Guest message drafts MUST be sent as **text messages** (using the `message` tool), NOT as voice/TTS. Lorenzo needs to copy-paste the draft into Hospitable/Airbnb. After the text draft, optionally send a short TTS confirmation like "Here's the draft for [guest name]".
+
 ```bash
 # Templates
 python3 ~/.openclaw/workspace/guest_responder.py --welcome "Name" Milano
@@ -227,6 +231,5 @@ Rules for ALL TTS responses:
 - **Respond in Lorenzo's language** — Italian question → Italian answer
 - **No bullet points or lists** in TTS — speak naturally
 - **One TTS call** per response, never more
-- **Never call the `message` tool** — TTS only
-- **Never send text messages** — TTS only
 - Be direct and warm
+- **EXCEPTION — Guest message drafts:** Use the `message` tool (TEXT) for guest drafts so Lorenzo can copy-paste. TTS only for the short confirmation after.

@@ -109,6 +109,7 @@ For messages that don't fit a template (complaints, questions, custom situations
 ## Rules
 
 - **NEVER auto-send** — always show draft first
+- **Drafts MUST be TEXT** — use the `message` tool, NOT TTS, so Lorenzo can copy-paste
 - **Match guest's language** — Italian guest → Italian reply
 - **Use Lorenzo's voice** — warm, direct, professional (see style guide)
 - **1-2 emojis max** — 😊 👍🏻 are most common
