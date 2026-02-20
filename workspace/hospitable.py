@@ -904,6 +904,18 @@ def show_dashboard():
     if gap_total == 0:
         print(f"     All properties fully booked! 🎉")
 
+    # 6. Pending reviews (quick check — first page only)
+    try:
+        reviews = get_reviews(pages=1)
+        total_pending = 0
+        for prop, data in reviews.items():
+            pending = [r for r in data["items"] if r.get("can_respond") and not r.get("responded_at")]
+            total_pending += len(pending)
+        if total_pending > 0:
+            print(f"\n  ⚠️  {total_pending} review(s) need response — run: --reviews --pending")
+    except Exception:
+        pass
+
     print(f"\n{'=' * 60}\n")
 
 
