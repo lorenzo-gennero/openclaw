@@ -11,6 +11,7 @@ Usage:
   python3 hospitable.py --conversations        → recent guest conversations
   python3 hospitable.py --token-check          → validate API token health
   python3 hospitable.py --reviews              → property reviews
+  python3 hospitable.py --dashboard             → daily ops overview (all-in-one)
   python3 hospitable.py --calendar [YYYY-MM]   → visual calendar with pricing
   python3 hospitable.py --guest <name>         → search guest by name
   python3 hospitable.py --gaps [N]             → find unbooked nights (next N days)
@@ -82,6 +83,9 @@ def _filter_properties(prop_filter: str = None) -> dict:
 # ── HTTP Helpers ──────────────────────────────────────────────────────────────
 
 def _token() -> str:
+    if not TOKEN_PATH.exists():
+        print(f"  Error: token file not found at {TOKEN_PATH}")
+        sys.exit(1)
     return TOKEN_PATH.read_text().strip()
 
 def _headers() -> dict:
@@ -696,6 +700,105 @@ def show_gaps(days: int = 30, prop_filter: str = None):
         print(f"  All properties fully booked for next {days} days! 🎉\n")
 
 
+def show_dashboard():
+    """Daily operations dashboard — everything a host needs in one view."""
+    today = date.today()
+    print(f"\n{'=' * 60}")
+    print(f"  🏠 DAILY DASHBOARD — {today.strftime('%A %B %d, %Y')}")
+    print(f"{'=' * 60}")
+
+    # 1. Today's check-ins/outs
+    today_str = today.isoformat()
+    reservations = get_reservations(
+        (today - timedelta(days=30)).isoformat(),
+        (today + timedelta(days=3)).isoformat()
+    )
+
+    check_ins_today = [r for r in reservations if _date_part(r.get("arrival_date", "")) == today_str]
+    check_outs_today = [r for r in reservations if _date_part(r.get("departure_date", "")) == today_str]
+
+    print(f"\n  ┌── TODAY")
+    if check_ins_today:
+        for r in check_ins_today:
+            guests = (r.get("guests") or {}).get("total", "?")
+            print(f"  │  ✈️  IN   {_guest_name(r)}  @{r.get('_property_name', '?')}  ({r.get('nights', '?')}n · {guests}g)")
+    if check_outs_today:
+        for r in check_outs_today:
+            print(f"  │  🏠 OUT  {_guest_name(r)}  @{r.get('_property_name', '?')}")
+    if not check_ins_today and not check_outs_today:
+        print(f"  │  No check-ins or check-outs today")
+
+    # Flag turnovers
+    in_props = {r.get("_property_name") for r in check_ins_today}
+    out_props = {r.get("_property_name") for r in check_outs_today}
+    for t in in_props & out_props:
+        print(f"  │  ⚠️  TURNOVER at {t}")
+
+    # 2. Tomorrow + day after
+    for offset in range(1, 3):
+        day = today + timedelta(days=offset)
+        day_str = day.isoformat()
+        day_ins = [r for r in reservations if _date_part(r.get("arrival_date", "")) == day_str]
+        day_outs = [r for r in reservations if _date_part(r.get("departure_date", "")) == day_str]
+        if day_ins or day_outs:
+            label = "TOMORROW" if offset == 1 else day.strftime("%a %b %d")
+            print(f"  ├── {label}")
+            for r in day_ins:
+                print(f"  │  ✈️  IN   {_guest_name(r)}  @{r.get('_property_name', '?')}")
+            for r in day_outs:
+                print(f"  │  🏠 OUT  {_guest_name(r)}  @{r.get('_property_name', '?')}")
+
+    # 3. Currently staying
+    staying = [
+        r for r in reservations
+        if _date_part(r.get("arrival_date", "")) < today_str
+        and _date_part(r.get("departure_date", "")) > today_str
+    ]
+    if staying:
+        print(f"  ├── CURRENTLY STAYING ({len(staying)})")
+        for r in staying:
+            dep = _date_part(r.get("departure_date", ""))
+            days_left = (date.fromisoformat(dep) - today).days
+            print(f"  │  🛏  {_guest_name(r)}  @{r.get('_property_name', '?')}  → {dep} ({days_left}d left)")
+
+    # 4. Nuki lock status (if available)
+    try:
+        sys.path.insert(0, str(Path.home() / ".openclaw/workspace"))
+        import nuki
+        locks = nuki.get_smartlocks()
+        if locks:
+            print(f"  ├── LOCKS")
+            for lk in locks:
+                name = nuki.get_lock_name(lk)
+                state = lk.get("state", {})
+                lock_state = nuki.LOCK_STATES.get(state.get("state", 255), "unknown")
+                icon = nuki.LOCK_ICONS.get(state.get("state", 255), "\U0001f510")
+                battery = state.get("batteryCharge", "?")
+                bat_warn = " \u26a0\ufe0f LOW" if state.get("batteryCritical") else ""
+                print(f"  │  {icon} {name}: {lock_state} · {battery}%{bat_warn}")
+    except Exception:
+        pass
+
+    # 5. Availability gaps (next 14 days)
+    print(f"  └── GAPS (next 14 days)")
+    gap_total = 0
+    for prop_id, prop_name in PROPERTIES.items():
+        cal_days = get_calendar(prop_id, today_str, (today + timedelta(days=14)).isoformat())
+        avail = [d for d in cal_days if d.get("status", {}).get("available", False)]
+        if avail:
+            gap_total += len(avail)
+            potential = sum(d.get("price", {}).get("amount", 0) for d in avail)
+            print(f"     {prop_name}: {len(avail)} open night(s) · €{potential / 100:.0f} potential")
+        else:
+            print(f"     {prop_name}: fully booked 🎉")
+        time.sleep(0.2)
+
+    if gap_total == 0:
+        print(f"     All properties fully booked! 🎉")
+
+    print(f"\n{'=' * 60}\n")
+
+
 def show_token_check():
     """Validate token with lightweight API call and check file age."""
     print("\n🔑  Token Health Check\n")
@@ -808,6 +911,8 @@ def main():
         interactive_menu()
     elif args[0] in ("--reviews", "-r"):
         show_reviews()
+    elif args[0] == "--dashboard":
+        show_dashboard()
     elif args[0] == "--calendar":
         month = args[1] if len(args) > 1 else None
         show_calendar(month, prop_filter)

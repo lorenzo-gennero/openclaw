@@ -40,6 +40,9 @@ LOCKS = {
 # ── HTTP Helpers ─────────────────────────────────────────────────────────────
 
 def _token() -> str:
+    if not TOKEN_PATH.exists():
+        print(f"  Error: token file not found at {TOKEN_PATH}")
+        sys.exit(1)
     return TOKEN_PATH.read_text().strip()
 
 def _headers() -> dict:
@@ -49,7 +52,7 @@ def _headers() -> dict:
         "Content-Type": "application/json",
     }
 
-def _api_get(path: str, params: dict = None, retries: int = 3) -> any:
+def _api_get(path: str, params: dict = None, retries: int = 3) :
     url = f"{BASE_URL}/{path}"
     if params:
         url += f"?{urllib.parse.urlencode(params)}"
@@ -69,7 +72,7 @@ def _api_get(path: str, params: dict = None, retries: int = 3) -> any:
             else:
                 raise
 
-def _api_post(path: str, body: dict = None, retries: int = 3) -> any:
+def _api_post(path: str, body: dict = None, retries: int = 3) :
     url = f"{BASE_URL}/{path}"
     data = json.dumps(body).encode() if body else b""
     req = urllib.request.Request(url, data=data, headers=_headers(), method="POST")
@@ -89,7 +92,7 @@ def _api_post(path: str, body: dict = None, retries: int = 3) -> any:
             else:
                 raise
 
-def _api_put(path: str, body: dict, retries: int = 3) -> any:
+def _api_put(path: str, body: dict, retries: int = 3) :
     url = f"{BASE_URL}/{path}"
     data = json.dumps(body).encode()
     req = urllib.request.Request(url, data=data, headers=_headers(), method="PUT")
