@@ -28,8 +28,9 @@ openclaw logs --follow        # live logs
 
 ### Reload Config (no restart needed)
 ```bash
-GW_PID=$(ps aux | grep openclaw-gateway | grep -v grep | awk '{print $2}' | head -1)
+GW_PID=$(pgrep -f openclaw-gateway | head -1)
 kill -SIGUSR1 $GW_PID
+# Or simply: openclaw gateway restart
 ```
 
 ### Switch Agents

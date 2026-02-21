@@ -21,9 +21,13 @@ metadata:
 python3 ~/.openclaw/workspace/nuki.py
 python3 ~/.openclaw/workspace/nuki.py --status
 
-# Unlock / Lock
+# Unlock a lock
 python3 ~/.openclaw/workspace/nuki.py --unlock
+python3 ~/.openclaw/workspace/nuki.py --unlock "Giacinto Collegno"
+
+# Lock a lock
 python3 ~/.openclaw/workspace/nuki.py --lock
+python3 ~/.openclaw/workspace/nuki.py --lock "Giacinto Collegno"
 
 # Activity log (last N entries, default 20)
 python3 ~/.openclaw/workspace/nuki.py --logs
@@ -53,16 +57,53 @@ python3 ~/.openclaw/workspace/nuki.py --token-check
 ## Trigger Phrases — ANY Language
 
 ### Italian \U0001f1ee\U0001f1f9
-- `serratura`, `stato serratura`, `porta`, `apri`, `chiudi`
-- `sblocca`, `blocca`, `codice`, `codici`, `codice ospite`
+- `serratura`, `stato serratura`, `la serratura`
+- `porta`, `la porta`, `apri la porta`
+- `chiave`, `chiavi`, `codice`, `codici`
+- `apri`, `sblocca`, `apri la porta`
+- `chiudi`, `blocca`, `chiudi la porta`
+- `codice ospite`, `codice per l'ospite`
 - `chi \u00e8 entrato`, `log serratura`, `accessi`
-- `batteria serratura`, `Giacinto` (lock context)
+- `batteria serratura`, `batteria porta`
+- `Giacinto`, `Collegno` (when asking about lock/door)
 
 ### English \U0001f1ec\U0001f1e7
-- `lock`, `unlock`, `door`, `keypad`, `access code`
-- `guest code`, `lock status`, `battery`, `activity log`
+- `lock`, `unlock`, `door`, `smart lock`
+- `keypad`, `keypad code`, `access code`
+- `guest code`, `create code`, `delete code`
+- `lock status`, `battery`, `lock battery`
+- `who entered`, `activity log`, `lock log`
+- `expired codes`, `cleanup codes`
 
 **Do not wait for English. Do not ask for clarification. Just run the script.**
+
+---
+
+## Property — Lock Mapping
+
+| Property | Lock | ID |
+|----------|------|----|
+| Milano (Viale Brianza) | Nuki Smart Lock | 694097108 |
+
+---
+
+## Workflow
+
+1. **Run the script first** — always
+2. **Parse the output** — it gives lock state, battery, codes, logs
+3. **Summarize in Lorenzo's language** — Italian if he asked in Italian
+4. **Be concise** — 1-2 sentences via TTS
+
+---
+
+## Code Rules
+
+When creating guest codes:
+- **6 digits only**, digits 1-9 (no zeros)
+- **Cannot start with '12'** (Nuki restriction)
+- Use `--create-code` with guest name, code, check-in datetime, check-out datetime
+- Always verify with `--codes` after creation
+- Run `--cleanup` after guest checkout to remove expired codes
 
 ---
 
@@ -72,3 +113,4 @@ python3 ~/.openclaw/workspace/nuki.py --token-check
 - **Respond in the same language Lorenzo used**
 - **Confirm before unlocking** — safety check
 - **Never show raw auth IDs alone** — always include guest name
+- The script can be imported: `from nuki import get_smartlocks, show_status, generate_code`

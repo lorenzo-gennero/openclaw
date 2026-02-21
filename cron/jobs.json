@@ -2,32 +2,6 @@
   "version": 1,
   "jobs": [
     {
-      "id": "7dc83dd4-d88e-44e7-9402-9a6e1961fc40",
-      "agentId": "main",
-      "name": "Daily Airbnb Briefing",
-      "enabled": false,
-      "notify": true,
-      "createdAtMs": 1771346683329,
-      "updatedAtMs": 1771532972038,
-      "schedule": {
-        "kind": "cron",
-        "expr": "0 8 * * *",
-        "tz": "Europe/Rome"
-      },
-      "sessionTarget": "main",
-      "wakeMode": "now",
-      "payload": {
-        "kind": "systemEvent",
-        "text": "Daily 8am briefing: Run `python3 ~/.openclaw/workspace/hospitable.py` for today's date, get check-ins and check-outs, then report via TTS in Italian. Keep it under 15 words."
-      },
-      "state": {
-        "lastRunAtMs": 1771484400033,
-        "lastStatus": "ok",
-        "lastDurationMs": 21293,
-        "consecutiveErrors": 0
-      }
-    },
-    {
       "id": "1c68733c-9d77-4c21-b2ea-f3f021220447",
       "agentId": "main",
       "sessionKey": "agent:main:weekly-revenue",
@@ -44,7 +18,7 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Weekly Sunday revenue report. Steps:\n1. Run `python3 ~/.openclaw/workspace/revenue.py` for YTD revenue.\n2. Run `python3 ~/.openclaw/workspace/hospitable.py --upcoming 7` for next week's check-ins/check-outs.\n3. Summarize: total revenue YTD, top property, upcoming week activity.\n4. Send via Telegram message in Italian, concise (max 10 lines).",
+        "message": "Weekly Sunday revenue report. Steps:\n1. Run `python3 ~/.openclaw/workspace/revenue.py` for YTD revenue.\n2. Run `python3 ~/.openclaw/workspace/revenue.py --forecast` for this month's forecast.\n3. Run `python3 ~/.openclaw/workspace/hospitable.py --upcoming 7` for next week's check-ins/check-outs.\n4. Run `python3 ~/.openclaw/workspace/hospitable.py --gaps 14` for availability gaps in the next 2 weeks.\n5. Summarize: total revenue YTD, forecast, top property, upcoming week activity, any gaps to fill.\n6. Send via Telegram message in Italian, concise (max 12 lines).",
         "timeoutSeconds": 120
       },
       "delivery": {
@@ -52,7 +26,9 @@
         "channel": "telegram",
         "to": "7906179714"
       },
-      "state": {}
+      "state": {
+        "nextRunAtMs": 1771783200000
+      }
     },
     {
       "id": "95652e93-2ff2-4e3e-855b-a4fa97f04855",
@@ -60,7 +36,7 @@
       "name": "Morning Briefing",
       "enabled": true,
       "createdAtMs": 1771532479726,
-      "updatedAtMs": 1771532970839,
+      "updatedAtMs": 1771665426880,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -70,25 +46,31 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Good morning Lorenzo! Give a brief morning update:\n1. Run `python3 ~/.openclaw/workspace/hospitable.py --upcoming 3` for the next 3 days of check-ins/check-outs.\n2. Run `python3 ~/.openclaw/workspace/nuki.py --status` to check lock state and battery. Flag if unlocked or battery low.\n3. Run `curl -s 'wttr.in/Turin?format=j1'` for weather.\n4. Send a Telegram message in Italian: greet, summarize today's check-ins/outs, lock status (only if issues), mention weather. Keep it concise (max 10 lines).",
-        "timeoutSeconds": 90
+        "message": "Good morning Lorenzo! Give a brief morning update:\n1. Run `python3 ~/.openclaw/workspace/hospitable.py --upcoming 3` for the next 3 days of check-ins/check-outs.\n2. Run `python3 ~/.openclaw/workspace/nuki.py --guest-codes` to check if any upcoming guests are missing keypad codes. Flag missing codes.\n3. Run `python3 ~/.openclaw/workspace/nuki.py --status` to check lock state and battery. Flag if unlocked or battery low.\n4. Run `curl -s 'wttr.in/Turin?format=j1'` for weather.\n5. Send a Telegram message in Italian: greet, summarize today's check-ins/outs, flag missing codes or lock issues, mention weather. Keep it concise (max 12 lines).",
+        "timeoutSeconds": 120
       },
       "delivery": {
         "mode": "announce",
         "channel": "telegram",
         "to": "7906179714"
       },
-      "state": {}
+      "state": {
+        "nextRunAtMs": 1771743600000,
+        "lastRunAtMs": 1771665376414,
+        "lastStatus": "ok",
+        "lastDurationMs": 50466,
+        "consecutiveErrors": 0
+      }
     },
     {
       "id": "a3b7e1f0-4c9d-4f8a-b2e6-8d1f3a5c7e90",
       "agentId": "main",
       "sessionKey": "agent:main:nuki-cleanup",
       "name": "Nuki Code Cleanup",
-      "enabled": false,
+      "enabled": true,
       "notify": true,
       "createdAtMs": 1771600000000,
-      "updatedAtMs": 1771600000000,
+      "updatedAtMs": 1771671611031,
       "schedule": {
         "kind": "cron",
         "expr": "0 12 * * *",
@@ -98,7 +80,7 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Run `python3 ~/.openclaw/workspace/nuki.py --cleanup` to remove expired guest keypad codes. Report what was removed (if anything) via Telegram in Italian, one line.",
+        "message": "Run `python3 ~/.openclaw/workspace/nuki.py --cleanup` to remove expired guest keypad codes. Only send a Telegram message if codes were actually removed. Report in Italian, one line.",
         "timeoutSeconds": 60
       },
       "delivery": {
@@ -106,7 +88,13 @@
         "channel": "telegram",
         "to": "7906179714"
       },
-      "state": {}
+      "state": {
+        "nextRunAtMs": 1771758000000,
+        "lastRunAtMs": 1771671600023,
+        "lastStatus": "ok",
+        "lastDurationMs": 11008,
+        "consecutiveErrors": 0
+      }
     }
   ]
 }
