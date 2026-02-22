@@ -8,7 +8,7 @@
       "name": "Weekly Revenue Summary",
       "enabled": true,
       "createdAtMs": 1771492745287,
-      "updatedAtMs": 1771532973171,
+      "updatedAtMs": 1771783320073,
       "schedule": {
         "kind": "cron",
         "expr": "0 19 * * 0",
@@ -27,7 +27,12 @@
         "to": "7906179714"
       },
       "state": {
-        "nextRunAtMs": 1771783200000
+        "nextRunAtMs": 1772388000000,
+        "lastRunAtMs": 1771783200043,
+        "lastStatus": "error",
+        "lastDurationMs": 120030,
+        "lastError": "Error: cron: job execution timed out",
+        "consecutiveErrors": 1
       }
     },
     {
@@ -36,7 +41,7 @@
       "name": "Morning Briefing",
       "enabled": true,
       "createdAtMs": 1771532479726,
-      "updatedAtMs": 1771665426880,
+      "updatedAtMs": 1771756174714,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -55,11 +60,12 @@
         "to": "7906179714"
       },
       "state": {
-        "nextRunAtMs": 1771743600000,
-        "lastRunAtMs": 1771665376414,
-        "lastStatus": "ok",
-        "lastDurationMs": 50466,
-        "consecutiveErrors": 0
+        "nextRunAtMs": 1771830000000,
+        "lastRunAtMs": 1771756136762,
+        "lastStatus": "error",
+        "lastDurationMs": 37952,
+        "consecutiveErrors": 1,
+        "lastError": "cron announce delivery failed"
       }
     },
     {
@@ -70,7 +76,7 @@
       "enabled": true,
       "notify": true,
       "createdAtMs": 1771600000000,
-      "updatedAtMs": 1771671611031,
+      "updatedAtMs": 1771758009728,
       "schedule": {
         "kind": "cron",
         "expr": "0 12 * * *",
@@ -89,10 +95,10 @@
         "to": "7906179714"
       },
       "state": {
-        "nextRunAtMs": 1771758000000,
-        "lastRunAtMs": 1771671600023,
+        "nextRunAtMs": 1771844400000,
+        "lastRunAtMs": 1771758000021,
         "lastStatus": "ok",
-        "lastDurationMs": 11008,
+        "lastDurationMs": 9707,
         "consecutiveErrors": 0
       }
     }
