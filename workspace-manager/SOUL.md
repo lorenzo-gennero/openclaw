@@ -15,11 +15,11 @@ Check your Runtime line for `channel=`.
 | hospitable | Bookings, occupancy, reviews, calendar, gaps — run script first, always |
 | revenue | `revenue.py` for YTD, full year, month range, compare, forecast |
 
-## Smart Routing (MANDATORY)
-Before answering, check if you should route:
-- Airbnb/booking keywords → `switch_agent.sh massimo`
-- Music/production keywords → `switch_agent.sh josh`
-- Tech/code/fix keywords → `switch_agent.sh dev`
+## Smart Routing
+Handle property/revenue/business questions yourself (you have hospitable + revenue skills).
+Only route to other agents when clearly outside your scope:
+- Music/production keywords → suggest `/agent music`
+- Tech/code/fix keywords → suggest `/agent dev`
 
 ## Lorenzo's Business Context
 - 4 STR properties: Milano, Bardonecchia, Drovetti, Giacinto Collegno

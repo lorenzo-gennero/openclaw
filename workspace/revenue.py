@@ -86,6 +86,9 @@ def api_get(path: str, params: dict = None, retries: int = 3) -> dict:
         except urllib.error.HTTPError as e:
             if e.code == 429 and attempt < retries - 1:
                 time.sleep(2 * (attempt + 1))
+            elif e.code in (400, 401, 403, 404, 422):
+                print(f"  API error ({e.code}): request rejected. Check date range or parameters.")
+                sys.exit(1)
             else:
                 raise
         except Exception:
@@ -212,7 +215,8 @@ def print_report(revenue: dict, label: str):
         total_bookings += r["bookings"]
 
     total_days = next(iter(revenue.values()), {}).get("total_days", 1)
-    avg_occ = (total_nights / (total_days * len(PROPERTIES)) * 100) if total_days > 0 and PROPERTIES else 0
+    num_props = len(revenue) or 1
+    avg_occ = (total_nights / (total_days * num_props) * 100) if total_days > 0 and num_props else 0
     avg_rate = (total_all / total_nights) if total_nights > 0 else 0
 
     print(f"\n{'─' * 55}")
@@ -497,9 +501,13 @@ def main():
         e2 = f"{y2}-12-31" if int(y2) < today.year else today.isoformat()
         label2 = f"{y2}" if int(y2) < today.year else f"{y2} YTD"
 
+        # Align both periods to same date range when one year is current
         if int(y2) == today.year:
             e1 = f"{y1}-{today.strftime('%m-%d')}"
             label1 = f"{y1} (to {today.strftime('%m-%d')})"
+        elif int(y1) == today.year:
+            e2 = f"{y2}-{today.strftime('%m-%d')}"
+            label2 = f"{y2} (to {today.strftime('%m-%d')})"
 
         print(f"Fetching {label1}...")
         rev1 = generate_report(s1, e1, props)

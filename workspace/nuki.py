@@ -65,6 +65,9 @@ def _api_get(path: str, params: dict = None, retries: int = 3):
         except urllib.error.HTTPError as e:
             if e.code == 429 and attempt < retries - 1:
                 time.sleep(2 * (attempt + 1))
+            elif e.code in (400, 401, 403, 404, 422):
+                print(f"  Nuki API error ({e.code}): request rejected.")
+                sys.exit(1)
             else:
                 raise
         except Exception:
@@ -85,6 +88,9 @@ def _api_post(path: str, body: dict = None, retries: int = 3):
         except urllib.error.HTTPError as e:
             if e.code == 429 and attempt < retries - 1:
                 time.sleep(2 * (attempt + 1))
+            elif e.code in (400, 401, 403, 404, 422):
+                print(f"  Nuki API error ({e.code}): request rejected.")
+                sys.exit(1)
             else:
                 raise
         except Exception:
@@ -105,6 +111,9 @@ def _api_put(path: str, body: dict, retries: int = 3):
         except urllib.error.HTTPError as e:
             if e.code == 429 and attempt < retries - 1:
                 time.sleep(2 * (attempt + 1))
+            elif e.code in (400, 401, 403, 404, 422):
+                print(f"  Nuki API error ({e.code}): request rejected.")
+                sys.exit(1)
             else:
                 raise
         except Exception:
@@ -123,6 +132,9 @@ def _api_delete(path: str, retries: int = 3) -> bool:
         except urllib.error.HTTPError as e:
             if e.code == 429 and attempt < retries - 1:
                 time.sleep(2 * (attempt + 1))
+            elif e.code in (400, 401, 403, 404, 422):
+                print(f"  Nuki API error ({e.code}): request rejected.")
+                sys.exit(1)
             else:
                 raise
         except Exception:
@@ -537,6 +549,9 @@ def show_guest_codes():
     upcoming_checkouts = []
 
     for r in reservations:
+        status = r.get("reservation_status", {}).get("current", {}).get("category", "")
+        if status == "cancelled":
+            continue
         arrival = (r.get("arrival_date", "") or "")[:10]
         departure = (r.get("departure_date", "") or "")[:10]
         guest = r.get("guest") or {}
@@ -663,6 +678,9 @@ def auto_create_codes():
     start_str = today.isoformat()
     missing = []
     for r in reservations:
+        status = r.get("reservation_status", {}).get("current", {}).get("category", "")
+        if status == "cancelled":
+            continue
         arrival = (r.get("arrival_date", "") or "")[:10]
         departure = (r.get("departure_date", "") or "")[:10]
         if departure <= start_str:

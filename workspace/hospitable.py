@@ -110,6 +110,9 @@ def _api_get(path: str, params: list = None, retries: int = 3) -> dict:
         except urllib.error.HTTPError as e:
             if e.code == 429 and attempt < retries - 1:
                 time.sleep(2 * (attempt + 1))
+            elif e.code in (400, 401, 403, 404, 422):
+                print(f"  API error ({e.code}): request rejected. Check date range or parameters.")
+                sys.exit(1)
             else:
                 raise
         except Exception:
@@ -129,6 +132,9 @@ def _api_post(path: str, body: dict, retries: int = 3) -> dict:
         except urllib.error.HTTPError as e:
             if e.code == 429 and attempt < retries - 1:
                 time.sleep(2 * (attempt + 1))
+            elif e.code in (400, 401, 403, 404, 422):
+                print(f"  API error ({e.code}): request rejected.")
+                sys.exit(1)
             else:
                 raise
         except Exception:
@@ -305,7 +311,14 @@ def show_day(target_date: str):
 
 def show_range(start: str, end: str):
     print(f"\n📅  Hospitable — {start} to {end}\n")
-    reservations = get_reservations(start, end)
+    if start > end:
+        print(f"  Error: start date ({start}) is after end date ({end}).\n")
+        return
+    try:
+        reservations = get_all_reservations(start, end)
+    except urllib.error.HTTPError as e:
+        print(f"  API error ({e.code}): date range may be invalid or too far in the future.\n")
+        return
     if not reservations:
         print("  No reservations found.\n")
         return
@@ -704,7 +717,7 @@ def show_guest(search_name: str, prop_filter: str = None):
         lang = guest.get("language", "?")
         location = guest.get("location", "")
         email = guest.get("email", "")
-        phones = guest.get("phone_numbers", [])
+        phones = [p for p in guest.get("phone_numbers", []) if p]
 
         guests_info = r.get("guests") or {}
         total_guests = guests_info.get("total", "?")
@@ -821,6 +834,10 @@ def show_dashboard():
         (today - timedelta(days=30)).isoformat(),
         (today + timedelta(days=3)).isoformat()
     )
+    reservations = [
+        r for r in reservations
+        if r.get("reservation_status", {}).get("current", {}).get("category") != "cancelled"
+    ]
 
     check_ins_today = [r for r in reservations if _date_part(r.get("arrival_date", "")) == today_str]
     check_outs_today = [r for r in reservations if _date_part(r.get("departure_date", "")) == today_str]

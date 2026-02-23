@@ -17,6 +17,9 @@ metadata:
 ## Commands
 
 ```bash
+# Daily operations dashboard (all-in-one: check-ins, check-outs, staying, locks, gaps, reviews)
+python3 ~/.openclaw/workspace/hospitable.py --dashboard
+
 # Today's check-ins/check-outs (default: today)
 python3 ~/.openclaw/workspace/hospitable.py
 

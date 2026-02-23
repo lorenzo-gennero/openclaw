@@ -18,8 +18,8 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Weekly Sunday revenue report. Steps:\n1. Run `python3 ~/.openclaw/workspace/revenue.py` for YTD revenue.\n2. Run `python3 ~/.openclaw/workspace/revenue.py --forecast` for this month's forecast.\n3. Run `python3 ~/.openclaw/workspace/hospitable.py --upcoming 7` for next week's check-ins/check-outs.\n4. Run `python3 ~/.openclaw/workspace/hospitable.py --gaps 14` for availability gaps in the next 2 weeks.\n5. Summarize: total revenue YTD, forecast, top property, upcoming week activity, any gaps to fill.\n6. Send via Telegram message in Italian, concise (max 12 lines).",
-        "timeoutSeconds": 120
+        "message": "Weekly Sunday revenue report. Steps:\n1. Run `python3 ~/.openclaw/workspace/revenue.py` for YTD revenue.\n2. Run `python3 ~/.openclaw/workspace/revenue.py --forecast` for this month's forecast.\n3. Run `python3 ~/.openclaw/workspace/hospitable.py --dashboard` for upcoming check-ins/outs, gaps, and reviews.\n4. Summarize: total revenue YTD, forecast, top property, upcoming week activity, any gaps to fill.\n5. Send via Telegram message in Italian, concise (max 12 lines).",
+        "timeoutSeconds": 300
       },
       "delivery": {
         "mode": "announce",
@@ -31,8 +31,8 @@
         "lastRunAtMs": 1771783200043,
         "lastStatus": "error",
         "lastDurationMs": 120030,
-        "lastError": "Error: cron: job execution timed out",
-        "consecutiveErrors": 1
+        "lastError": "Error: cron: job execution timed out (timeout increased to 300s)",
+        "consecutiveErrors": 0
       }
     },
     {
@@ -41,7 +41,7 @@
       "name": "Morning Briefing",
       "enabled": true,
       "createdAtMs": 1771532479726,
-      "updatedAtMs": 1771756174714,
+      "updatedAtMs": 1771830408309,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -51,8 +51,8 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Good morning Lorenzo! Give a brief morning update:\n1. Run `python3 ~/.openclaw/workspace/hospitable.py --upcoming 3` for the next 3 days of check-ins/check-outs.\n2. Run `python3 ~/.openclaw/workspace/nuki.py --guest-codes` to check if any upcoming guests are missing keypad codes. Flag missing codes.\n3. Run `python3 ~/.openclaw/workspace/nuki.py --status` to check lock state and battery. Flag if unlocked or battery low.\n4. Run `curl -s 'wttr.in/Turin?format=j1'` for weather.\n5. Send a Telegram message in Italian: greet, summarize today's check-ins/outs, flag missing codes or lock issues, mention weather. Keep it concise (max 12 lines).",
-        "timeoutSeconds": 120
+        "message": "Good morning Lorenzo! Give a brief morning update:\n1. Run `python3 ~/.openclaw/workspace/hospitable.py --dashboard` for today's operations overview (check-ins, check-outs, currently staying, lock status, gaps, pending reviews — all in one).\n2. Run `curl -s 'wttr.in/Turin?format=j1'` for weather.\n3. Send a Telegram message in Italian: greet, summarize today's check-ins/outs with turnover warnings, flag lock issues or low battery, mention weather. Keep it concise (max 12 lines).",
+        "timeoutSeconds": 300
       },
       "delivery": {
         "mode": "announce",
@@ -60,12 +60,12 @@
         "to": "7906179714"
       },
       "state": {
-        "nextRunAtMs": 1771830000000,
-        "lastRunAtMs": 1771756136762,
+        "nextRunAtMs": 1771916400000,
+        "lastRunAtMs": 1771830061705,
         "lastStatus": "error",
-        "lastDurationMs": 37952,
-        "consecutiveErrors": 1,
-        "lastError": "cron announce delivery failed"
+        "lastDurationMs": 346604,
+        "consecutiveErrors": 0,
+        "lastError": "Error: cron: job execution timed out (timeout increased to 300s)"
       }
     },
     {
@@ -76,7 +76,7 @@
       "enabled": true,
       "notify": true,
       "createdAtMs": 1771600000000,
-      "updatedAtMs": 1771758009728,
+      "updatedAtMs": 1771844412298,
       "schedule": {
         "kind": "cron",
         "expr": "0 12 * * *",
@@ -95,11 +95,41 @@
         "to": "7906179714"
       },
       "state": {
-        "nextRunAtMs": 1771844400000,
-        "lastRunAtMs": 1771758000021,
+        "nextRunAtMs": 1771930800000,
+        "lastRunAtMs": 1771844400017,
         "lastStatus": "ok",
-        "lastDurationMs": 9707,
+        "lastDurationMs": 12281,
         "consecutiveErrors": 0
+      }
+    },
+    {
+      "id": "b4e2a1c8-7f3d-4a6e-9c5b-2d8f0e1a3b7c",
+      "agentId": "main",
+      "sessionKey": "agent:main:nuki-auto-codes",
+      "name": "Nuki Auto Codes",
+      "enabled": true,
+      "createdAtMs": 1771916400000,
+      "updatedAtMs": 1771916400000,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 10 * * *",
+        "tz": "Europe/Rome"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run `python3 ~/.openclaw/workspace/nuki.py --auto-codes` to create time-limited keypad codes for upcoming Milano guests who don't have one yet. Only send a Telegram message if codes were actually created. Report in Italian: guest name, code, dates. Max 4 lines.",
+        "timeoutSeconds": 90
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "telegram",
+        "to": "7906179714"
+      },
+      "state": {
+        "consecutiveErrors": 0,
+        "nextRunAtMs": 1771923600000
       }
     }
   ]
