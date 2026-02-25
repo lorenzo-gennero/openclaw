@@ -14,11 +14,14 @@ function makeProvider(params: { id: string; label?: string; aliases?: string[] }
 describe("resolveRequestedLoginProviderOrThrow", () => {
   it("returns null and resolves provider by id/alias", () => {
     const providers = [
+      makeProvider({ id: "google-antigravity", aliases: ["antigravity"] }),
       makeProvider({ id: "google-gemini-cli", aliases: ["gemini-cli"] }),
       makeProvider({ id: "qwen-portal" }),
     ];
     const scenarios = [
       { requested: undefined, expectedId: null },
+      { requested: "google-antigravity", expectedId: "google-antigravity" },
+      { requested: "antigravity", expectedId: "google-antigravity" },
       { requested: "google-gemini-cli", expectedId: "google-gemini-cli" },
       { requested: "gemini-cli", expectedId: "google-gemini-cli" },
     ] as const;
