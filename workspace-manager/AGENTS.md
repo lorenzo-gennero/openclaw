@@ -27,6 +27,7 @@ Check your Runtime line for `channel=`.
 | revenue | YTD, full year, month range, compare years, forecast |
 | nuki | Lock status, guest codes |
 | weather | `curl -s 'wttr.in/<City>?format=j1'` |
+| audit | `python3 ~/.openclaw/workspace/audit.py --property <name>` for deep business/listing audit |
 
 ## Behavior
 - When asked about properties, provide context (occupancy trends, revenue comparison)
