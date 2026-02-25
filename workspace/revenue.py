@@ -270,7 +270,7 @@ def print_monthly(year: int = None, props: dict = None):
     if year is None:
         year = today.year
 
-    last_month = 12 if year < today.year else today.month
+    last_month = today.month if year == today.year else 12
     print(f"\n{'=' * 70}")
     print(f"  📊 MONTHLY BREAKDOWN — {year}")
     print(f"{'=' * 70}")
@@ -407,16 +407,24 @@ def print_forecast(props: dict = None):
     # 2. Future bookings this month
     from datetime import timedelta
     tomorrow = today + timedelta(days=1)
-    future = generate_report(tomorrow.isoformat(), month_end, props)
-    future_total = sum(r.get("total", 0) for r in future.values()) / 100
-    future_nights = sum(r.get("nights", 0) for r in future.values())
+    future = {}
+    future_total = 0
+    future_nights = 0
+    if tomorrow.month == mon:
+        future = generate_report(tomorrow.isoformat(), month_end, props)
+        future_total = sum(r.get("total", 0) for r in future.values()) / 100
+        future_nights = sum(r.get("nights", 0) for r in future.values())
 
-    print(f"\n  ── Upcoming Bookings ({tomorrow.isoformat()} → {month_end}) ──")
-    for pname in sorted(future.keys()):
-        r = future[pname]
-        print(f"    {pname}: €{r['total'] / 100:,.0f} ({r['nights']}n)")
-    if not future:
-        print(f"    No upcoming bookings this month")
+    if tomorrow.month == mon:
+        print(f"\n  ── Upcoming Bookings ({tomorrow.isoformat()} → {month_end}) ──")
+        for pname in sorted(future.keys()):
+            r = future[pname]
+            print(f"    {pname}: €{r['total'] / 100:,.0f} ({r['nights']}n)")
+        if not future:
+            print(f"    No upcoming bookings this month")
+    else:
+        print(f"\n  ── Upcoming Bookings ──")
+        print(f"    Last day of month — no remaining days")
     print(f"    {'─' * 40}")
     print(f"    Subtotal: €{future_total:,.0f} ({future_nights} nights)")
 
@@ -424,25 +432,29 @@ def print_forecast(props: dict = None):
     sys.path.insert(0, str(Path.home() / ".openclaw/workspace"))
     gap_potential = 0
     gap_nights = 0
-    try:
-        import hospitable
-        remaining_start = tomorrow.isoformat()
-        print(f"\n  ── Unbooked Gap Potential ({remaining_start} → {month_end}) ──")
-        for pid, pname in props.items():
-            cal_days = hospitable.get_calendar(pid, remaining_start, month_end)
-            avail = [d for d in cal_days if d.get("status", {}).get("available", False)]
-            if avail:
-                potential = sum(d.get("price", {}).get("amount", 0) for d in avail) / 100
-                gap_potential += potential
-                gap_nights += len(avail)
-                print(f"    {pname}: {len(avail)} open night(s) · €{potential:,.0f} if booked")
-            else:
-                print(f"    {pname}: fully booked")
-            time.sleep(0.2)
-        print(f"    {'─' * 40}")
-        print(f"    Gap potential: €{gap_potential:,.0f} ({gap_nights} nights)")
-    except ImportError:
-        print(f"\n  (Could not import hospitable module for gap analysis)")
+    if tomorrow.month == mon:
+        try:
+            import hospitable
+            remaining_start = tomorrow.isoformat()
+            print(f"\n  ── Unbooked Gap Potential ({remaining_start} → {month_end}) ──")
+            for pid, pname in props.items():
+                cal_days = hospitable.get_calendar(pid, remaining_start, month_end)
+                avail = [d for d in cal_days if d.get("status", {}).get("available", False)]
+                if avail:
+                    potential = sum(d.get("price", {}).get("amount", 0) for d in avail) / 100
+                    gap_potential += potential
+                    gap_nights += len(avail)
+                    print(f"    {pname}: {len(avail)} open night(s) · €{potential:,.0f} if booked")
+                else:
+                    print(f"    {pname}: fully booked")
+                time.sleep(0.2)
+            print(f"    {'─' * 40}")
+            print(f"    Gap potential: €{gap_potential:,.0f} ({gap_nights} nights)")
+        except ImportError:
+            print(f"\n  (Could not import hospitable module for gap analysis)")
+    else:
+        print(f"\n  ── Unbooked Gap Potential ──")
+        print(f"    Last day of month — no remaining days")
 
     # 4. Summary
     confirmed = actual_total + future_total
@@ -470,9 +482,13 @@ def _parse_global_args(args: list) -> tuple:
     remaining = []
     i = 0
     while i < len(args):
-        if args[i] == "--property" and i + 1 < len(args):
-            prop_filter = args[i + 1]
-            i += 2
+        if args[i] == "--property":
+            if i + 1 < len(args):
+                prop_filter = args[i + 1]
+                i += 2
+            else:
+                print("  Error: --property requires a name (e.g. --property bardonecchia)")
+                sys.exit(1)
         else:
             remaining.append(args[i])
             i += 1

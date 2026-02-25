@@ -475,12 +475,56 @@ def cleanup_codes():
                         auth_id = auth.get("id")
                         auth_name = auth.get("name", "?")
                         print(f"  Removing expired: {auth_name} (until {_fmt_datetime(until_str)}) from {lock_name}")
-                        _api_delete(f"smartlock/{lock_id}/auth/{auth_id}")
-                        removed += 1
+                        try:
+                            _api_delete(f"smartlock/{lock_id}/auth/{auth_id}")
+                            removed += 1
+                        except SystemExit:
+                            print(f"  Failed to remove {auth_name}")
                 except Exception:
                     continue
         except Exception as e:
             print(f"  Error processing {lock_name}: {e}")
+
+    # Also remove codes for cancelled reservations (best-effort)
+    try:
+        sys.path.insert(0, str(Path.home() / ".openclaw/workspace"))
+        import hospitable
+        today = date.today()
+        wide_start = (today - timedelta(days=7)).isoformat()
+        end_str = (today + timedelta(days=14)).isoformat()
+        milano_id = "cd4bf5fb-16ef-49c8-b3db-93437e5f009f"
+        milano_props = {milano_id: "Milano"}
+        reservations = hospitable.get_reservations(wide_start, end_str, includes=["guest"], props=milano_props)
+        cancelled_names = set()
+        for r in reservations:
+            status = r.get("reservation_status", {}).get("current", {}).get("category", "")
+            if status == "cancelled":
+                guest = r.get("guest") or {}
+                name = f"{guest.get('first_name', '')} {guest.get('last_name', '')}".strip().lower()
+                if name:
+                    cancelled_names.add(name)
+        if cancelled_names:
+            for lk in locks:
+                lock_id = str(lk["smartlockId"])
+                lock_name = get_lock_name(lk)
+                try:
+                    auths = get_auth_list(lock_id)
+                    for auth in auths:
+                        if auth.get("type") != 13 or not auth.get("enabled"):
+                            continue
+                        code_name = auth.get("name", "").lower().strip()
+                        if code_name in cancelled_names:
+                            auth_id = auth.get("id")
+                            print(f"  Removing cancelled guest: {auth.get('name', '?')} from {lock_name}")
+                            try:
+                                _api_delete(f"smartlock/{lock_id}/auth/{auth_id}")
+                                removed += 1
+                            except SystemExit:
+                                print(f"  Failed to remove {auth.get('name', '?')}")
+                except Exception:
+                    continue
+    except Exception:
+        pass  # Hospitable unavailable — skip cancelled check
 
     if removed == 0:
         print("  No expired codes found.\n")
@@ -726,6 +770,8 @@ def auto_create_codes():
             print(f"    \u2705 Created!")
             created += 1
             time.sleep(0.5)  # rate limit courtesy
+        except SystemExit:
+            print(f"    \u274c Failed (API error)")
         except Exception as e:
             print(f"    \u274c Failed: {e}")
 

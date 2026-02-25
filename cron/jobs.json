@@ -8,7 +8,7 @@
       "name": "Weekly Revenue Summary",
       "enabled": true,
       "createdAtMs": 1771492745287,
-      "updatedAtMs": 1771783320073,
+      "updatedAtMs": 1772021307050,
       "schedule": {
         "kind": "cron",
         "expr": "0 19 * * 0",
@@ -41,7 +41,7 @@
       "name": "Morning Briefing",
       "enabled": true,
       "createdAtMs": 1771532479726,
-      "updatedAtMs": 1771830408309,
+      "updatedAtMs": 1772011419867,
       "schedule": {
         "kind": "cron",
         "expr": "0 8 * * *",
@@ -60,12 +60,14 @@
         "to": "7906179714"
       },
       "state": {
-        "nextRunAtMs": 1771916400000,
-        "lastRunAtMs": 1771830061705,
-        "lastStatus": "error",
-        "lastDurationMs": 346604,
+        "nextRunAtMs": 1772089200000,
+        "lastRunAtMs": 1772011301120,
+        "lastStatus": "ok",
+        "lastDurationMs": 118747,
         "consecutiveErrors": 0,
-        "lastError": "Error: cron: job execution timed out (timeout increased to 300s)"
+        "lastRunStatus": "ok",
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered"
       }
     },
     {
@@ -76,7 +78,7 @@
       "enabled": true,
       "notify": true,
       "createdAtMs": 1771600000000,
-      "updatedAtMs": 1771844412298,
+      "updatedAtMs": 1772017210024,
       "schedule": {
         "kind": "cron",
         "expr": "0 12 * * *",
@@ -95,11 +97,14 @@
         "to": "7906179714"
       },
       "state": {
-        "nextRunAtMs": 1771930800000,
-        "lastRunAtMs": 1771844400017,
+        "nextRunAtMs": 1772103600000,
+        "lastRunAtMs": 1772017200042,
         "lastStatus": "ok",
-        "lastDurationMs": 12281,
-        "consecutiveErrors": 0
+        "lastDurationMs": 9982,
+        "consecutiveErrors": 0,
+        "lastRunStatus": "ok",
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered"
       }
     },
     {
@@ -109,7 +114,7 @@
       "name": "Nuki Auto Codes",
       "enabled": true,
       "createdAtMs": 1771916400000,
-      "updatedAtMs": 1771916400000,
+      "updatedAtMs": 1772011457493,
       "schedule": {
         "kind": "cron",
         "expr": "0 10 * * *",
@@ -129,7 +134,13 @@
       },
       "state": {
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1771923600000
+        "nextRunAtMs": 1772096400000,
+        "lastRunAtMs": 1772011419867,
+        "lastStatus": "ok",
+        "lastDurationMs": 37626,
+        "lastRunStatus": "ok",
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered"
       }
     }
   ]

@@ -48,6 +48,9 @@ python3 ~/.openclaw/workspace/nuki.py --cleanup
 # Cross-reference Hospitable guests with keypad codes
 python3 ~/.openclaw/workspace/nuki.py --guest-codes
 
+# Auto-create codes for all upcoming Milano guests missing one
+python3 ~/.openclaw/workspace/nuki.py --auto-codes
+
 # Token health check
 python3 ~/.openclaw/workspace/nuki.py --token-check
 ```

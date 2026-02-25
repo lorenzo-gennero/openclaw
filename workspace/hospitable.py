@@ -287,9 +287,14 @@ def _fmt(r: dict, kind: str) -> str:
 
 # ── Commands ──────────────────────────────────────────────────────────────────
 
-def show_day(target_date: str):
+def show_day(target_date: str, prop_filter: str = None):
     print(f"\n📅  Hospitable — {target_date}\n")
-    reservations = get_reservations(target_date, target_date)
+    props = _filter_properties(prop_filter)
+    reservations = get_reservations(target_date, target_date, props=props)
+    reservations = [
+        r for r in reservations
+        if r.get("reservation_status", {}).get("current", {}).get("category") != "cancelled"
+    ]
     check_ins = [r for r in reservations if _date_part(r.get("arrival_date", "")) == target_date]
     check_outs = [r for r in reservations if _date_part(r.get("departure_date", "")) == target_date]
 
@@ -309,13 +314,14 @@ def show_day(target_date: str):
     else:
         print("  No check-outs.\n")
 
-def show_range(start: str, end: str):
+def show_range(start: str, end: str, prop_filter: str = None):
     print(f"\n📅  Hospitable — {start} to {end}\n")
     if start > end:
         print(f"  Error: start date ({start}) is after end date ({end}).\n")
         return
+    props = _filter_properties(prop_filter)
     try:
-        reservations = get_all_reservations(start, end)
+        reservations = get_all_reservations(start, end, props=props)
     except urllib.error.HTTPError as e:
         print(f"  API error ({e.code}): date range may be invalid or too far in the future.\n")
         return
@@ -453,18 +459,23 @@ def show_reviews(mode: str = "recent", prop_filter: str = None):
         print(f"  Total reviews across all properties: {grand_total}")
     print()
 
-def show_upcoming(days: int = 7):
+def show_upcoming(days: int = 7, prop_filter: str = None):
     """Show check-ins, check-outs, and currently staying guests for the next N days."""
     today = date.today()
     end = today + timedelta(days=days - 1)
     start_str = today.isoformat()
     end_str = end.isoformat()
+    props = _filter_properties(prop_filter)
 
     print(f"\n📅  Upcoming — next {days} day(s) ({start_str} to {end_str})\n")
 
     # Fetch reservations that overlap this window (use wider range to catch ongoing stays)
     wide_start = (today - timedelta(days=30)).isoformat()
-    reservations = get_reservations(wide_start, end_str)
+    reservations = get_reservations(wide_start, end_str, props=props)
+    reservations = [
+        r for r in reservations
+        if r.get("reservation_status", {}).get("current", {}).get("category") != "cancelled"
+    ]
 
     if not reservations:
         print("  No reservations found.\n")
@@ -506,7 +517,7 @@ def show_upcoming(days: int = 7):
             print(f"    🛏  {_guest_name(r)}  @{r.get('_property_name', '?')}  → leaves {departure}")
         print()
 
-def show_occupancy(start: str = None, end: str = None):
+def show_occupancy(start: str = None, end: str = None, prop_filter: str = None):
     """Calculate occupancy % per property from reservation data."""
     today = date.today()
     if not start:
@@ -517,10 +528,11 @@ def show_occupancy(start: str = None, end: str = None):
     start_date = date.fromisoformat(start)
     end_date = date.fromisoformat(end)
     total_days = (end_date - start_date).days + 1
+    props = _filter_properties(prop_filter)
 
     print(f"\n📊  Occupancy Report — {start} to {end} ({total_days} days)\n")
 
-    reservations = get_all_reservations(start, end, includes=["guest", "financials"])
+    reservations = get_all_reservations(start, end, includes=["guest", "financials"], props=props)
 
     by_prop: dict[str, list] = {}
     for r in reservations:
@@ -534,7 +546,7 @@ def show_occupancy(start: str = None, end: str = None):
     grand_revenue = 0
     grand_bookings = 0
 
-    for prop_name in sorted(PROPERTIES.values()):
+    for prop_name in sorted(props.values()):
         items = by_prop.get(prop_name, [])
         nights = sum(r.get("nights", 0) for r in items)
         bookings = len(items)
@@ -556,7 +568,7 @@ def show_occupancy(start: str = None, end: str = None):
         grand_revenue += revenue
         grand_bookings += bookings
 
-    avg_occ = (grand_nights / (total_days * len(PROPERTIES)) * 100) if total_days > 0 else 0
+    avg_occ = (grand_nights / (total_days * len(props)) * 100) if total_days > 0 else 0
     avg_rate = (grand_revenue / 100 / grand_nights) if grand_nights > 0 else 0
     print(f"  ── TOTAL ─────────────────────────────────────────")
     print(f"  {grand_bookings} booking(s) · {grand_nights} night(s) · {avg_occ:.0f}% avg occupancy")
@@ -571,6 +583,10 @@ def show_conversations():
     print(f"\n💬  Recent Conversations — {start} to {end}\n")
 
     reservations = get_reservations(start, end)
+    reservations = [
+        r for r in reservations
+        if r.get("reservation_status", {}).get("current", {}).get("category") != "cancelled"
+    ]
     if not reservations:
         print("  No recent reservations.\n")
         return
@@ -600,12 +616,13 @@ def show_calendar(month: str = None, prop_filter: str = None):
     today = date.today()
 
     if month:
-        if len(month) == 7:  # YYYY-MM
+        if len(month) == 7 and month[4] == '-':  # YYYY-MM
             year, mon = int(month[:4]), int(month[5:7])
-        elif len(month) == 4 and month.isdigit():  # Just month number
+        elif len(month) <= 2 and month.isdigit():  # Month number (1-12)
             year, mon = today.year, int(month)
         else:
-            year, mon = today.year, today.month
+            print(f"  Invalid month format: {month}. Use YYYY-MM (e.g. 2026-03) or 1-12.")
+            return
     else:
         year, mon = today.year, today.month
 
@@ -678,6 +695,9 @@ def show_calendar(month: str = None, prop_filter: str = None):
 
 def show_guest(search_name: str, prop_filter: str = None):
     """Search for a guest by name across recent reservations."""
+    if not search_name or not search_name.strip():
+        print("\n  Please provide a guest name to search for.\n")
+        return
     today = date.today()
     # Search ±90 days
     start = (today - timedelta(days=90)).isoformat()
@@ -1022,9 +1042,13 @@ def _parse_global_args(args: list) -> tuple:
     remaining = []
     i = 0
     while i < len(args):
-        if args[i] == "--property" and i + 1 < len(args):
-            prop_filter = args[i + 1]
-            i += 2
+        if args[i] == "--property":
+            if i + 1 < len(args):
+                prop_filter = args[i + 1]
+                i += 2
+            else:
+                print("  Error: --property requires a name (e.g. --property milano)")
+                sys.exit(1)
         else:
             remaining.append(args[i])
             i += 1
@@ -1036,17 +1060,17 @@ def main():
     args, prop_filter = _parse_global_args(raw_args)
 
     if not args:
-        show_day(date.today().isoformat())
+        show_day(date.today().isoformat(), prop_filter)
     elif args[0] == "--upcoming":
         try:
             days = int(args[1]) if len(args) > 1 else 7
         except ValueError:
             days = 7
-        show_upcoming(days)
+        show_upcoming(days, prop_filter)
     elif args[0] == "--occupancy":
         start = args[1] if len(args) > 1 else None
         end = args[2] if len(args) > 2 else None
-        show_occupancy(start, end)
+        show_occupancy(start, end, prop_filter)
     elif args[0] == "--conversations":
         show_conversations()
     elif args[0] == "--token-check":
@@ -1077,9 +1101,9 @@ def main():
     elif args[0] in ("--help", "-h"):
         print(__doc__)
     elif len(args) >= 2:
-        show_range(args[0], args[1])
+        show_range(args[0], args[1], prop_filter)
     else:
-        show_day(args[0])
+        show_day(args[0], prop_filter)
 
 if __name__ == "__main__":
     main()
