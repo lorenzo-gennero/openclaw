@@ -34,6 +34,95 @@
         "lastError": "Error: cron: job execution timed out (timeout increased to 300s)",
         "consecutiveErrors": 0
       }
+    },
+    {
+      "id": "541458ae-723b-481b-8570-c68430432855",
+      "agentId": "main",
+      "sessionKey": "agent:main:main",
+      "name": "ArtAudioParts Shipment Reminder",
+      "enabled": true,
+      "deleteAfterRun": true,
+      "createdAtMs": 1772100217327,
+      "updatedAtMs": 1772100217327,
+      "schedule": {
+        "kind": "at",
+        "at": "2026-02-27T08:00:00.000Z"
+      },
+      "sessionTarget": "main",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "systemEvent",
+        "text": "Reminder: Lorenzo ordered from ArtAudioParts (confirmation #9ICCJ7VCA, €20.90, shipping to Innsbruck). Ask him if he received the tracking number in his email so you can monitor the shipment."
+      },
+      "state": {
+        "nextRunAtMs": 1772179200000
+      }
+    },
+    {
+      "id": "94df6571-9ed4-4501-b0ea-01d60a9b2cf2",
+      "name": "Health Check",
+      "enabled": true,
+      "createdAtMs": 1772134559137,
+      "updatedAtMs": 1772141412722,
+      "schedule": {
+        "kind": "cron",
+        "expr": "*/30 7-22 * * *",
+        "tz": "Europe/Rome"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run a quick health check. Report concisely (one short paragraph, no headers).\n\n1. Check gateway status: run 'openclaw gateway status' and report if healthy.\n2. Check disk usage: run 'df -h /' and flag if usage is above 85%.\n3. Check recent gateway errors: read the last 20 lines of ~/.openclaw/logs/gateway.err.log and flag anything concerning.\n\nNOTE: Email inbox, calendar, and Coolify checks will be added once those integrations are configured. For now, skip them.\n\nEnd with a one-line summary: all clear, or list issues found."
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "discord",
+        "to": "channel:1476659633513828574"
+      },
+      "state": {
+        "nextRunAtMs": 1772172000000,
+        "lastRunAtMs": 1772141400053,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 12669,
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered",
+        "consecutiveErrors": 0
+      }
+    },
+    {
+      "id": "c260774f-bbd9-4720-9f4b-e31e3c25694f",
+      "name": "Health Check",
+      "enabled": true,
+      "createdAtMs": 1772134621961,
+      "updatedAtMs": 1772141425175,
+      "schedule": {
+        "kind": "cron",
+        "expr": "*/30 7-22 * * *",
+        "tz": "Europe/Rome"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Run a quick health check. Report concisely (one short paragraph, no headers).\n\n1. Check gateway status: run 'openclaw gateway status' and report if healthy.\n2. Check disk usage: run 'df -h /' and flag if usage is above 85%.\n3. Check recent gateway errors: read the last 20 lines of ~/.openclaw/logs/gateway.err.log and flag anything concerning.\n\nNOTE: Email inbox, calendar, and Coolify checks will be added once those integrations are configured. For now, skip them.\n\nEnd with a one-line summary: all clear, or list issues found."
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "discord",
+        "to": "channel:1476659633513828574"
+      },
+      "state": {
+        "nextRunAtMs": 1772172000000,
+        "lastRunAtMs": 1772141412722,
+        "lastRunStatus": "ok",
+        "lastStatus": "ok",
+        "lastDurationMs": 12453,
+        "lastDelivered": true,
+        "lastDeliveryStatus": "delivered",
+        "consecutiveErrors": 0
+      }
     }
   ]
 }

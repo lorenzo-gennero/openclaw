@@ -329,6 +329,11 @@ def show_range(start: str, end: str, prop_filter: str = None):
         print("  No reservations found.\n")
         return
 
+    # Filter out cancelled reservations
+    reservations = [
+        r for r in reservations
+        if r.get("reservation_status", {}).get("current", {}).get("category") != "cancelled"
+    ]
     reservations.sort(key=lambda r: r.get("arrival_date", ""))
     by_prop: dict[str, list] = {}
     for r in reservations:
