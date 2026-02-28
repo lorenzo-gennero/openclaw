@@ -23,8 +23,8 @@ python3 -m agents.josh.main heatmap
 
 ## Vault Location
 
-Symlinked at `Josh-Brain/` in this workspace, actual path:
-`~/Library/Mobile Documents/iCloud~md~obsidian/Documents/JoshBrain/Josh-Brain/`
+**Absolute path:** `/Users/lorenzogennero/Library/Mobile Documents/iCloud~md~obsidian/Documents/JoshBrain/Josh-Brain/`
+**Workspace symlink:** `Josh-Brain/` (use the read tool to read files directly — no shell commands needed)
 
 ## TTS
 

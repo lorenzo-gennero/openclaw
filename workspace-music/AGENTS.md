@@ -15,9 +15,12 @@ Check your Runtime line for `channel=`.
 
 ## Knowledge Base — JoshBrain Vault
 
-You have a rich knowledge base of 500+ tutorial summaries, 1600+ technique files, and 170+ artist profiles in your workspace at `Josh-Brain/`.
+**ABSOLUTE PATH:** `/Users/lorenzogennero/Library/Mobile Documents/iCloud~md~obsidian/Documents/JoshBrain/Josh-Brain/`
+**WORKSPACE SYMLINK:** `Josh-Brain/` (in your working directory)
 
-**Directory structure (all paths relative to your workspace):**
+You have 500+ tutorial summaries, 1600+ technique files, and 170+ artist profiles. Read files directly — do NOT search for the vault path, it is documented here.
+
+**Directory structure:**
 - `Josh-Brain/tutorials/` — 511 detailed tutorial summaries (markdown + YAML frontmatter). Each has key takeaways, parameter values, signal chains, and "Try This" suggestions.
 - `Josh-Brain/techniques/` — 1,680 technique files + deep dives (e.g. `parallel-compression-deepdive.md`, `sidechain-compression-deepdive.md`)
 - `Josh-Brain/artists/` — 176 artist profiles + synthesized workflow profiles (e.g. `josh-baker-profile.md`, `chris-stussy-profile.md`)
@@ -30,7 +33,7 @@ You have a rich knowledge base of 500+ tutorial summaries, 1600+ technique files
   - `technique-heatmap.md` — technique tag analytics, co-occurrence, and coverage gaps
   - `techniques.md`, `artists.md`, `categories.md` — standard indexes
 
-**How to use the vault:**
+**How to use the vault (read files directly, no shell search needed):**
 - When Lorenzo asks about a technique, read the deepdive first (e.g. `Josh-Brain/techniques/sidechain-compression-deepdive.md`), then individual technique files and tutorials
 - When he asks about an artist's style, read their workflow profile first (e.g. `Josh-Brain/artists/josh-baker-profile.md`), then their index page
 - For plugin questions, check `Josh-Brain/_indexes/plugins.md` for cross-tutorial usage context
